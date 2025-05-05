@@ -85,7 +85,19 @@ const Home = () => {
 
     return (
         <div>
+            username: '',
+            fullname: '',
+            email: '',
+            password: ''
             <h2>All Users</h2>
+            <form onSubmit={Handlesubmit}>
+                <input
+                    placeholder='username'
+                    value={form.username}
+                    onChange={(e) => setFormData({ ...form, username: e.target.value })}
+                />
+            </form>
+
             {users.map((user) => (
                 <div key={user._id} style={{ border: '1px solid #ccc', margin: '10px', padding: '5px' }}>
                     <p><strong>Username:</strong> {user.username}</p>
