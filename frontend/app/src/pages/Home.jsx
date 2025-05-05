@@ -4,7 +4,7 @@ import { getUsers, deleteUser, updateUser, createUser } from '../api/api'
 
 const Home = () => {
 
-    const [user, setUser] = useState([])
+    const [users, setUser] = useState([])
     const [form, setFormData] = useState(
         {
             username: '',
@@ -47,7 +47,7 @@ const Home = () => {
         } catch (error) {
             console.log(`Something went wrong while creating user`, error)
         }
-        
+
         return (
             <div>Home</div>
         )
@@ -85,6 +85,15 @@ const Home = () => {
 
     return (
         <div>
+            <h2>All Users</h2>
+            {users.map((user) => (
+                <div key={user._id} style={{ border: '1px solid #ccc', margin: '10px', padding: '5px' }}>
+                    <p><strong>Username:</strong> {user.username}</p>
+                    <p><strong>Full Name:</strong> {user.fullname}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <button onClick={() => Handledelete(user._id)}>Delete</button>
+                </div>
+            ))}
             {successMessage && <p>{successMessage}</p>}
             <button onClick={() => Handledelete(123)}>Delete User</button>
         </div>
