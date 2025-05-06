@@ -85,19 +85,56 @@ const Home = () => {
 
     return (
         <div>
-            username: '',
-            fullname: '',
-            email: '',
-            password: ''
-            <h2>All Users</h2>
+            <h2>Fill up the form</h2>
             <form onSubmit={Handlesubmit}>
                 <input
                     placeholder='username'
                     value={form.username}
-                    onChange={(e) => setFormData({ ...form, username: e.target.value })}
+                    onChange={
+                        (e) => setFormData(  //e: Event object, jasto button click garda ke bhayo bhanne info.
+                            {
+                                ...form,
+                                username:
+                                    e.target.value //Yo typed text ho (jastai, "r" type garda "r").
+                            }
+                        )
+                    }
                 />
+
+                <input
+                    placeholder='fullname'
+                    value={form.fullname}
+                    onChange={(e) => setFormData(
+                        { ...form, fullname: e.target.value }
+                    )}
+                />
+
+                <input
+                    placeholder='email'
+                    value={form.email}
+                    onChange={(e) => setFormData(
+                        {
+                            ...form,
+                            email: e.target.value
+                        }
+                    )}
+                />
+
+                <input
+                    placeholder='password'
+                    value={form.password}
+                    onChange={(e) => setFormData(
+                        {
+                            ...form,
+                            password: e.target.value
+                        }
+                    )} />
+
+                
+                <button type="submit">submit</button>
             </form>
 
+            <h2>All Users</h2>
             {users.map((user) => (
                 <div key={user._id} style={{ border: '1px solid #ccc', margin: '10px', padding: '5px' }}>
                     <p><strong>Username:</strong> {user.username}</p>
@@ -107,7 +144,8 @@ const Home = () => {
                 </div>
             ))}
             {successMessage && <p>{successMessage}</p>}
-            <button onClick={() => Handledelete(123)}>Delete User</button>
+            <button onClick={() => Handledelete()}>Delete</button>
+            <button onClick={() => Handleupdate()}>Update</button>
         </div>
     )
 }

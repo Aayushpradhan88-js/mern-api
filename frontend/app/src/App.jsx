@@ -1,10 +1,12 @@
-import Home from './pages/Home'
+// import Home from './pages/Home'
+import { EmployeeFrom } from "./project/logic"
 
 const App = () => {
   return (
     <div>
-        <h1>User CRUD WEB-APP</h1>
-        <Home/>
+      <EmployeeFrom/>
+      {/* <h1>User CRUD WEB-APP</h1> */}
+      {/* <Home/> */}
     </div>
   )
 }

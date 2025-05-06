@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import express from 'express'
 import { router } from './userRoutes.js'
 const app = express()
