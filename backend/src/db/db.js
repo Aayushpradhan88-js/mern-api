@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 // ongodb+srv://girimahesh614:aayushpradhan123@cluster0.pxu0v9r.mongodb.net/?retryWrites=true&w=majority
 const DB_NAME = "CRUDAPPLICATION"
-const MONGODB_URI = "mongodb+srv://asyncaayush:mernproject@cluster0.mysnzkg.mongodb.net/?retryWrites=true&w=majority"
+const MONGODB_URI = "mongodb+srv://girimahesh614:2LuJAM89VVcqpYr3@cluster0.pxu0v9r.mongodb.net"
 //password = mernproject, username: asyncaayush
 const dbConnection = async () => {
     try {

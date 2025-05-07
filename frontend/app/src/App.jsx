@@ -6,7 +6,7 @@ const App = () => {
     <div>
       {/* <EmployeeFrom/> */}
       <h1>User CRUD WEB-APP</h1>
-      <Home/>
+      <Home />
     </div>
   )
 }

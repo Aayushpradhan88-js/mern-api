@@ -1,12 +1,11 @@
 import { User } from "./user.models.js";
 
 //create user
-//Read user = get all users
-//Update User = with uid
-//delete user = with id
+
 
 //createuser
 export const createUser = async (req, res) => {
+  console.log(req.body)
   try {
     const { username, fullname, email, password } = req.body;
     const user = await User.create({
@@ -44,7 +43,7 @@ export const getUsers = async (req, res) => {
     const userDetails = await User.find();
     return res.status(201).json({
       message: "All User Data is successfully fetched",
-      data: userDetails,
+      users: userDetails,
     });
   } catch (error) {
     return res.status(501).json({ message: "user is not get " });

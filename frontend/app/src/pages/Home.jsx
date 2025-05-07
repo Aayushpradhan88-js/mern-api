@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getUsers, deleteUser, updateUser, createUser } from '../api/api'
 
-
 const Home = () => {
 
     const [users, setUser] = useState([])
@@ -23,7 +22,8 @@ const Home = () => {
     //getting user data
     const fetchUsers = async () => {
         const res = await getUsers()
-        setUser(res.data)
+        console.log(res)
+        setUser(res.data.users)
     }
 
     //creating user data
