@@ -26,7 +26,7 @@ function EmployeeFrom() {
         }
     }
 
-    //delete
+    // delete
     const Handledelete = (id) => {
         if (id > 0) {
             if (window.confirm("Are you sure do you want to delete!!")) {
@@ -36,6 +36,7 @@ function EmployeeFrom() {
         }
     }
 
+    //save user
     const Handlesave = (e) => {
         let error = ''
 
@@ -65,6 +66,7 @@ function EmployeeFrom() {
         }
     }
 
+    //update user
     const Handleupdate = () => {
         const index = data.map((item) => {
             return item.id
@@ -79,6 +81,7 @@ function EmployeeFrom() {
         Handleclear()
     }
 
+    //clear user
     const Handleclear = () => {
         setId(id)
         setFirstname('')
@@ -135,10 +138,10 @@ function EmployeeFrom() {
                             return (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{index.id}</td>
-                                    <td>{index.firstname}</td>
-                                    <td>{index.lastname}</td>
-                                    <td>{index.age}</td>
+                                    <td>{item.id}</td>
+                                    <td>{item.firstname}</td>
+                                    <td>{item.lastname}</td>
+                                    <td>{item.age}</td>
                                     <td>
                                         <button onClick={Handleedit(item.id)}>Edit</button>
                                         <button onClick={Handledelete(item.id)}>Delete</button>

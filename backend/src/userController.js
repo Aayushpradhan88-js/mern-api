@@ -22,14 +22,14 @@ export const createUser = async (req, res) => {
 
     return res.status(201).json({
       message: `User created Successfully ${user.username}`,
-      //   user: {
-      //     id: user._id,
-      //     username: user.username,
-      //     fullname: user.fullname,
-      //     email: user.email,
-      //     password: user.password,
-      //   },
-      data: user
+      // user: {
+      //   id: user._id,
+      //   username: user.username,
+      //   fullname: user.fullname,
+      //   email: user.email,
+      //   password: user.password,
+      // },
+      data: user,
     });
   } catch (error) {
     return res
@@ -76,9 +76,8 @@ export const updateUser = async (req, res) => {
   try {
     const updateUser = await User.findByIdAndUpdate(
       req.params.id, // The ID of the user you're updating (from the URL)
-      req.body,       // the data like email, username, fullname, password is the actual thing we need to update
-      {new: true}
-
+      req.body, // the data like email, username, fullname, password is the actual thing we need to update
+      { new: true }
     );
     if (!updateUser) {
       return res.status(403).json("Id doesn't match");
