@@ -1,13 +1,16 @@
-import Home from './pages/Home'
-// import { EmployeeFrom } from "./project/logic"
+import Login from "./pages/Login"
+import Main from "./pages/main"
+import Register from "./pages/register"
 
+const App = () => {
   return (
     <div>
-      {/* <EmployeeFrom/> */}
-      {/* <h1>User CRUD WEB-APP</h1> */}
-      <Home />
+      <Main />
+      <Login />
+      <Register />
     </div>
   )
+}
 
 
 export default App
