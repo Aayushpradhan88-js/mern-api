@@ -2,10 +2,9 @@ import { User } from "./user.models.js";
 
 //create user
 
-
 //createuser
 export const createUser = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const { username, fullname, email, password } = req.body;
     const user = await User.create({
@@ -34,6 +33,35 @@ export const createUser = async (req, res) => {
     return res
       .status(501)
       .json({ message: "User not created check all the fields " });
+  }
+};
+
+//login user
+/*
+Algorithm
+1.get the user email, password
+2. is the field empty check
+3. validating email and password 
+4. hashing password and comparing it to the db password
+ */
+
+export const loginUsers = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const isEmailValid = await User.findOne({ email });
+    if (isEmailValid === "") {
+      return res.status(401).json({
+        message: "Please try again and fill al the fields with email",
+      });
+    }
+
+    const isPasswordValid = await User.validatePassword(password);
+    if (isPasswordValid === "") throw new Error("please fill all the field");
+  } catch (error) {
+    return res.status(401).json({
+      message: "Please try again and fill al the fields with password",
+    });
   }
 };
 
