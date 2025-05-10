@@ -47,28 +47,32 @@ const Main = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>detail gif video</p>
-                            <div className="text-xs text-red-400">bad</div>
+                            <p>What is MCP and why you should pay attention </p>
+                            <div className="text-xs text-red-400">private</div>
+                            {/* <div className="text-xs text-red-400">private</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Copied backend developer resume</p>
-                            <div className="text-xs text-green-400">good</div>
+                            <p>Complete Backend development with NodeJS - 1</p>
+                            <div className="text-xs text-green-400">public</div>
+                            {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Copied backend developer resume</p>
-                            <div className="text-xs text-green-400">good</div>
+                            <p>Complete Backend development with NodeJS - 2</p>
+                            <div className="text-xs text-green-400">public</div>
+                            {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Piece with quote</p>
-                            <div className="text-xs text-green-400">good</div>
+                            <p>Peace</p>
+                            <div className="text-xs text-green-400">public</div>
+                            {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
                     </div>
 
                     {/* <!-- Pop up section --> */}
-                    <div className="bg-gray-900 p-4 mt-6 rounded">
+                    {/* <div className="bg-gray-900 p-4 mt-6 rounded">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-6 h-6 bg-white"></div>
                             <div className="w-6 h-6 bg-white"></div>
@@ -77,7 +81,7 @@ const Main = () => {
                         <p>Copied backend developer header & footer</p>
                         <div className="text-xs text-gray-400 mt-2">software developer</div>
                         <div className="text-xs text-gray-400">company | news</div>
-                    </div>
+                    </div> */}
 
                     {/* <!-- Chat icon --> */}
                     <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
@@ -89,11 +93,11 @@ const Main = () => {
                                     d="M17 8h2a2 2 0 012 2v7a2 2 0 01-2 2h-6l-4 4v-4H7a2 2 0 01-2-2v-1" />
                             </svg>
                         </button>
-                        <div className="bg-gray-900 p-2 rounded text-sm">
-                            <div className="text-red-500">bad</div>
+                        {/* <div className="bg-gray-900 p-2 rounded text-sm">
+                            <div className="text-red-500">Priv</div>
                             <div className="text-green-500">good</div>
                             <div className="text-blue-500">okay-ish</div>
-                        </div>
+                        </div> */}
                     </div>
                 </main>
             </div>

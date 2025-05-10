@@ -21,6 +21,7 @@ const Register = () => {
                             placeholder="create password" />
                     </div>
 
+3
                     <button className="Login-button rounded-xl text-white py-2">SignUp</button>
                     <form />
 
