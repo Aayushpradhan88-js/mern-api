@@ -1,6 +1,25 @@
-import React from 'react'
+import { useState } from 'react'
 
 const Login = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+            const res = await fetch("http://localhost:5000/api/v2/users/login-user", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            })
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.message)
+            alert("You're are logged in")
+    }
     return (
         <section className="bg-gray-50 min-h-screen flex items-center justify-center">
             {/* <!--Login container--> */}
@@ -12,12 +31,12 @@ const Login = () => {
                         in</p>
 
                     {/* <!--Data entry group--> */}
-                    <form className="flex flex-col gap-4" action="">
-                        <input className="p-2 mt-8 rounded-xl border" type="text" name="email" placeholder="Your email" />
+                    <form className="flex flex-col gap-4" action="" onSubmit={handleSubmit}>
+                        <input className="p-2 mt-8 rounded-xl border" type="text" name="email" placeholder="Your email" onChange={(e) => setEmail(e.target.value)} />
                         <div className="relative">
                             <input className="p-2 mt-8 rounded-xl border w-full" type="password" name="password"
-                                placeholder="Your password" />
-                            <p className="mt-5 text-xs border-b border-gray-400 py-4">
+                                placeholder="Your password" onChange={(e) => setPassword(e.target.value)} />
+                            <p className="mt-5 text-xs border-b border-gray-400 py-4">  
                                 <a href="">Forgot Your password?</a>
                             </p>
                         </div>
