@@ -5,8 +5,8 @@ import Register from "./pages/register"
 const App = () => {
   return (
     <div>
-      <Login />
       <Register />
+      <Login />
       <Main />
     </div>
   )

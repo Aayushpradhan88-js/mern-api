@@ -14,6 +14,10 @@ const userModel = new Schema({
     type: String,
     required: true,
   },
+  
+  lastname: {
+    type: String,
+  },
 
   email: {
     type: String,
@@ -39,11 +43,10 @@ export const validatePassword = (password, hashedPassword) => {
   return validation;
 };
 
-
 const JWT_SECRET_KEY = "YAEIRPOE34NKDNFOJPOJ34";
 const options = {
   expiresIn: "20min",
-}
+};
 
 export const generateToken = async (data) => {
   const token = await jwt.sign(data, "JWT_SECRET_KEY", options);
@@ -51,12 +54,12 @@ export const generateToken = async (data) => {
   if (!token) throw new Error("Token is not generated");
 
   return token;
-}
+};
 
-export const verifyToken  = async(token) => {
-    const token = jwt.verify(token, JWT_SECRET_KEY, options)
-    if(!token ) throw new Error("Token is not valid")
-    return token
-}
+export const verifyToken = async (token) => {
+  const validToken = jwt.verify(token, JWT_SECRET_KEY, options);
+  if (!validToken) throw new Error("Token is not valid");
+  return validToken;
+};
 
 export const User = mongoose.model("User", userModel);
