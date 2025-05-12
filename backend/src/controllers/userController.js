@@ -15,20 +15,24 @@ export const registerUser = async (req, res, _) => {
     }
 
     const registeredUser = await User.create({
-      username,
+      username: username.toLowerCase(),
       firstname,
       lastname,
       email,
-      password: hashingPassword,
+      password,
     });
 
-    if (!registeredUser) {
+    const createdUser = await User.findById(registeredUser._id).select(
+      "-password"
+    );
+
+    if (!createdUser) {
       return res
-        .status(400)
+        .status(500)
         .json("Something went wrong while registering user!!!!");
     }
 
-    const userTokenGeneration = await User.generateToken(token);
+    const userTokenGeneration = await User.generateToken();
 
     return res.status(201).json({
       message: `User created Successfully ${registeredUser.username}`,
@@ -48,33 +52,55 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      return res.send(400).json({
-        message: "Email or Password field is empty  ",
+      return res.status(400).json({
+        message: "Please fill all the fields",
       });
     }
 
     const isEmailValid = await User.findOne({ email });
-
-    if (isEmailValid === "") {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+    if (isEmailValid) throw new Error("Invalid email or password");
 
     const isPasswordValid = await User.validatePassword(password);
-    if (isPasswordValid === "") throw new Error("Invalid email or password");
+    if (isPasswordValid) throw new Error("Invalid email or password");
 
     const isTokenValid = await User.verifyToken(valid);
 
-    return res.send(401).json({
+    const loggedIn = await User.findById(isEmailValid._id).select("-password");
+
+    //cookie
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    };
+
+    return res.status(401).cookie("TOKEN", isTokenValid, options).json({
       message: "successfully logged in",
-      isTokenValid,
-    })
+      user: loggedIn,
+    });
   } catch (error) {
-    return res.status(401).json({
-      message: "Please try again and fill all the fields with password",
-    })
+    return res.status(401).json({});
   }
+};
+
+//logout
+export const logoutUser = async (req, res) => {
+  User.findByIdAndUpdate(req.user._id, { $unset: { token: 1 } })
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: true
+  
+  }
+  return res
+  .status(200)
+  .clearCookie("token", options)
+  .json(
+    {
+      message: "Successfully logout"
+    }
+  )
 }
 
 //getting all users
@@ -88,7 +114,7 @@ export const getUsers = async (req, res) => {
   } catch (error) {
     return res.status(501).json({ message: "user is not get " });
   }
-}
+};
 
 //getting user with id
 export const getUser = async (req, res) => {
@@ -132,7 +158,7 @@ export const updateUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: "cannot update user" });
   }
-}
+};
 
 //delete user
 export const deleteUser = async (req, res) => {
