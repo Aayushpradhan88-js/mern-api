@@ -1,14 +1,13 @@
 import { useState } from 'react'
 
-const Register = () => {
+export const Register = () => {
     // const [data, setData] = useState([])
     const [username, setUsername] = useState('')
     const [fullname, setFullname] = useState('')
     const [lastname, setLastname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    // const api = await
+    
     //Submit logic
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -84,5 +83,3 @@ const Register = () => {
         </div>
     )
 }
-
-export default Register
