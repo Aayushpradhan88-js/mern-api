@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "json-web-token";
 import cookie from "cookie";
 
@@ -35,22 +35,18 @@ const userModel = new Schema({
 });
 
 //hashing password
-export const hashingPassword = async (password) => {
-  try {
-    const hashing = await bcryptjs.hash(password, 10);
-    return hashing;
-  } catch (error) {
-    return res.send(500).json({
-      message: "Password is not hashed",
-      error,
-    });
-  }
-};
+
+userModel.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 //comparing password
-export const validatePassword = async (password, hashedPassword) => {
+userModel.methods.validatePassword = async (password, hashedPassword) => {
   try {
-    const validation = await bcryptjs.compare(password, hashedPassword);
+    const validation = await bcrypt.compare(password, hashedPassword);
     return validation;
   } catch (error) {
     return res.send(404).json({
@@ -61,47 +57,62 @@ export const validatePassword = async (password, hashedPassword) => {
 };
 
 //token generation
-export const generateToken = async (tokengeneration) => {
+userModel.methods.generateAccessToken = async (user) => {
   try {
-    const token = jwt.sign({
-      _id: this._id,
-      username: this.username,
-      firstname: this.firstname,
-      lastname: this.lastname,
-      email: this.email,
-      password: this.password
-    },
-      tokengeneration,
-      process.env.JWT_SECRET_KEY,
+    const accessToken = jwt.sign(
       {
-        EXPIRESIN: process.env.expiresIn
+        _id: user._id,
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        password: user.password,
+      },
+      process.env.ACCESS_TOKEN_SECRET_KEY,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
       }
     );
-    return token;
+    return accessToken;
   } catch (error) {
-    return res.send(501).json(
+    return res.send(501).json({
+      message: "Token is not created",
+      error: error.message,
+    });
+  }
+};
+
+//Refresh Token
+userModel.methods.generateRefreshToken = async () => {
+  try {
+    const refreshToken = jwt.sign(
       {
-       message: "Token is not generated",
-       error
+        _id: this._id,
+      },
+      process.env.REFRESH_TOKEN_SECRET_KEY,
+      {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
       }
     );
+    return refreshToken;
+  } catch (error) {
+    return res.send(501).json({
+      message: "Refreshtoken is not created",
+      error: error.message,
+    });
   }
 };
 
 //token verification
-export const verifyToken = async (validtoken) => {
+userModel.methods.tokenVerification = async (validtoken) => {
   try {
     const validToken = jwt.verify(validtoken, process.env.JWT_SECRET_KEY);
     return validToken;
   } catch (error) {
-    return res
-    .send(408)
-    .json(
-      {
-        message: "Token is not valid, check you're token",
-        error
-      }
-    )
+    return res.send(408).json({
+      message: "Token is not valid, check you're token",
+      error,
+    });
   }
 };
 

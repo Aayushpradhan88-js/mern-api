@@ -1,17 +1,52 @@
 import { User } from "../models/userModels.js";
 
+const generateAccessTokenAndRefreshToken = async (userId) => {
+  try {
+    const token = await User.findById(userId);
+    const accessToken = token.generateAccessToken();
+    const refreshToken = token.generateRefreshToken();
+
+    token.refreshToken = refreshToken;
+
+    await token.save({
+      validationBeforeSave: false,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  } catch (error) {
+    return res.status(401).json({
+      message:
+        "Something went wrong while generating access token & refresh token",
+      error: error.message,
+    });
+  }
+};
+
 //Registering User
 export const registerUser = async (req, res, _) => {
   const { username, firstname, lastname, email, password } = req.body;
   try {
+    if (
+      [username, firstname, lastname, email, password].some(
+        (field) => field?.trim === ""
+      )
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
     const existingUser = await User.findOne({
-      $or: [{ username: username }, { email: email }],
+      $or: [{ username }, { email }],
     });
 
-    if (!existingUser) {
-      return res
-        .status(409)
-        .json({ message: "Username or email is already exist" });
+    if (existingUser) {
+      return res.status(409).json({
+        message: `Username: ${existingUser.username} or email is already exist`,
+      });
     }
 
     const registeredUser = await User.create({
@@ -32,27 +67,24 @@ export const registerUser = async (req, res, _) => {
         .json("Something went wrong while registering user!!!!");
     }
 
-    const userTokenGeneration = await User.generateToken();
-
     return res.status(201).json({
-      message: `User created Successfully ${registeredUser.username}`,
-      data: registeredUser,
-      userTokenGeneration,
+      message: `${registeredUser.username} is successfully registered`,
+      createdUser,
     });
   } catch (error) {
     return res.status(501).json({
       message: "User not created check all the fields ",
-      message,
+      error: error.message,
     });
   }
 };
 
 //login user
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body
   try {
-    if (!email || !password) {
-      return res.status(400).json({
+    if ([email, password].some((field) => field?.trim === "")) {
+      return res.status(401).json({
         message: "Please fill all the fields",
       });
     }
@@ -63,7 +95,8 @@ export const loginUser = async (req, res) => {
     const isPasswordValid = await User.validatePassword(password);
     if (isPasswordValid) throw new Error("Invalid email or password");
 
-    const isTokenValid = await User.verifyToken(valid);
+    const { accessToken, refreshToken } =
+      await generateAccessTokenAndRefreshToken(isEmailValid._id);
 
     const loggedIn = await User.findById(isEmailValid._id).select("-password");
 
@@ -74,34 +107,35 @@ export const loginUser = async (req, res) => {
       sameSite: "Strict",
     };
 
-    return res.status(401).cookie("TOKEN", isTokenValid, options).json({
-      message: "successfully logged in",
-      user: loggedIn,
-    });
+    return res
+      .status(401)
+      .cookie("ACCESSTOKEN", accessToken, options)
+      .cookie("REFRESHTOKEN", refreshToken, options)
+      .json({
+        message: "Successfully logged in",
+        user: loggedIn, accessToken, refreshToken
+      });
   } catch (error) {
-    return res.status(401).json({});
+    return res.status(401).json({
+      message:"Unauthorized User",
+      error: error.message
+    });
   }
 };
 
 //logout
 export const logoutUser = async (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { $unset: { token: 1 } })
+  User.findByIdAndUpdate(req.user._id, { $unset: { token: 1 } });
 
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: true
-  
-  }
-  return res
-  .status(200)
-  .clearCookie("token", options)
-  .json(
-    {
-      message: "Successfully logout"
-    }
-  )
-}
+    sameSite: true,
+  };
+  return res.status(200).clearCookie("token", options).json({
+    message: "Successfully logout",
+  });
+};
 
 //getting all users
 export const getUsers = async (req, res) => {
