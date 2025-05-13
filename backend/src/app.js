@@ -18,8 +18,10 @@ app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "16kb" }));
 
-app.use("/api/v2/users", router);
-
+app.use("/api/v2/user", router);
+app.get("/profile", (req, res) => {
+  res.render("index")
+})
 function notFound(req, res) {
   res.status(404).json({ message: "Route not found!!" });
 }
