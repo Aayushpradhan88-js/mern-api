@@ -1,5 +1,4 @@
 import express from 'express'
-import multer from 'multer'
 import {
   registerUser,
   loginUser,
@@ -9,6 +8,7 @@ import {
   deleteUser,
 } from '../controllers/userController.js'
 import { upload } from '../middlewares/uploadController.js'
+import { app } from '../app.js'
 
 const router = express.Router()
 
@@ -20,10 +20,10 @@ router.patch("/:id", updateUser)
 router.delete("/:id", deleteUser)
 
 //file upload
-router.get("/profile", upload.single("file"), (req, res) => {
+router.post("/profile", upload.single("profileImage"), (req, res) => {
   console.log(req.body)
   console.log(req.file)
-  // return res.redirect("/register")
+  return res.redirect("/register")
 })
 
 export { router }

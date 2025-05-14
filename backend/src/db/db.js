@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const DB_NAME = "CRUDAPPLICATION";
 const MONGODB_URI =
-  //    "mongodb+srv://aayush123:ENvo7xYdwwizjpy@cluster0.pxu0v9r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   "mongodb+srv://asyncaayush:AKovIYjEJh49WQrN@cluster0.mysnzkg.mongodb.net";
 const dbConnection = async () => {
   try {
