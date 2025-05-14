@@ -8,7 +8,7 @@ import {
   deleteUser,
 } from '../controllers/userController.js'
 import { upload } from '../middlewares/uploadController.js'
-import { app } from '../app.js'
+
 
 const router = express.Router()
 
@@ -16,14 +16,7 @@ router.post("/register", registerUser)
 router.post("/login", loginUser)
 router.get("/details", getUsers)
 router.get("/details/:id", getUser)
-router.patch("/:id", updateUser)
+router.patch("/:id", upload.single("profileImage") , updateUser)
 router.delete("/:id", deleteUser)
-
-//file upload
-router.post("/profile", upload.single("profileImage"), (req, res) => {
-  console.log(req.body)
-  console.log(req.file)
-  return res.redirect("/register")
-})
 
 export { router }
