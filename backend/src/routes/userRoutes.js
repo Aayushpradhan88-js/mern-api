@@ -1,4 +1,4 @@
-import express from 'express'
+import express from "express";
 import {
   registerUser,
   loginUser,
@@ -6,17 +6,30 @@ import {
   getUser,
   updateUser,
   deleteUser,
-} from '../controllers/userController.js'
-import { upload } from '../middlewares/uploadController.js'
+} from "../controllers/userController.js";
+import { upload } from "../middlewares/uploadController.js";
 
+const router = express.Router();
 
-const router = express.Router()
+router.post(
+  "/register",
+  upload.fields([
+    { 
+      name: "avatar",
+      maxCount: 1 
+    },
+    { 
+      name: "coverImage", 
+      maxCount: 1 
+    },
+  ]),
+  registerUser
+);
 
-router.post("/register", registerUser)
-router.post("/login", loginUser)
-router.get("/details", getUsers)
-router.get("/details/:id", getUser)
-router.patch("/:id", upload.single("profileImage") , updateUser)
-router.delete("/:id", deleteUser)
+router.post("/login", loginUser);
+router.get("/details", getUsers);
+router.get("/details/:id", getUser);
+router.post("/upload", upload.single("coverImage"), updateUser);
+router.delete("/:id", deleteUser);
 
-export { router }
+export { router };

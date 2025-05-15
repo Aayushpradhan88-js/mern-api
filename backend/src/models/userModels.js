@@ -3,36 +3,55 @@ import bcrypt from "bcrypt";
 import jwt from "json-web-token";
 import cookie from "cookie";
 
-const userModel = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    LowerCase: true,
-  },
+const userModel = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      LowerCase: true,
+    },
 
-  firstname: {
-    type: String,
-    required: true,
-  },
+    firstname: {
+      type: String,
+      required: true,
+    },
 
-  lastname: {
-    type: String,
-  },
+    lastname: {
+      type: String,
+    },
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    LowerCase: true,
-  },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      LowerCase: true,
+    },
 
-  password: {
-    type: String,
-    required: true,
-    kMaxLength: [6, "At least 6 symbols, letters, dots, numbers combination"],
+    password: {
+      type: String,
+      required: true,
+      kMaxLength: [6, "At least 6 symbols, letters, dots, numbers combination"],
+    },
+
+    watchHistory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Video",
+    },
+
+    avatar: {
+      type: String,
+      required: true,
+    },
+
+    coverImage: {
+      type: String,
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 //hashing password
 

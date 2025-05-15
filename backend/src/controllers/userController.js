@@ -1,4 +1,5 @@
 import { User } from "../models/userModels.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
   try {
@@ -49,8 +50,26 @@ export const registerUser = async (req, res, _) => {
       });
     }
 
+    const avatarLocalPath = req.files?.avatar[0]?.path;
+    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    if (!avatarLocalPath) {
+      return res.status(401).json({
+        message: "Avatar1 is required",
+      });
+    }
+
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+    if (!avatar) {
+      return res.status(401).json({
+        message: "Avatar is required",
+      });
+    }
+
     const registeredUser = await User.create({
       username: username.toLowerCase(),
+      avatar: avatar.url,
+      coverImage: coverImage?.url || "",
       firstname,
       lastname,
       email,
@@ -81,7 +100,7 @@ export const registerUser = async (req, res, _) => {
 
 //login user
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   try {
     if ([email, password].some((field) => field?.trim === "")) {
       return res.status(401).json({
@@ -113,12 +132,14 @@ export const loginUser = async (req, res) => {
       .cookie("REFRESHTOKEN", refreshToken, options)
       .json({
         message: "Successfully logged in",
-        user: loggedIn, accessToken, refreshToken
+        user: loggedIn,
+        accessToken,
+        refreshToken,
       });
   } catch (error) {
     return res.status(401).json({
-      message:"Unauthorized User",
-      error: error.message
+      message: "Unauthorized User",
+      error: error.message,
     });
   }
 };
@@ -173,25 +194,28 @@ export const getUser = async (req, res) => {
 
 //update user
 export const updateUser = async (req, res) => {
-  try {
-    const updateUser = await User.findByIdAndUpdate(
-      req.params.id, // The ID of the user you're updating (from the URL)
-      req.body, // the data like email, username, fullname, password is the actual thing we need to update
-      { new: true }
-    );
-    if (!updateUser) {
-      return res.status(403).json("Id doesn't match");
-    }
+  // try {
+  //   const updateUser = await User.findByIdAndUpdate(
+  //     req.params.id, // The ID of the user you're updating (from the URL)
+  //     req.body, // the data like email, username, fullname, password is the actual thing we need to update
+  //     { new: true }
+  //   );
+  //   if (!updateUser) {
+  //     return res.status(403).json("Id doesn't match");
+  //   }
 
-    //TODO: Max Time user can update user details [online Research]
+  //   //TODO: Max Time user can update user details [online Research]
 
-    return res.status(201).json({
-      message: `You're details are updated ${updateUser.username}`,
-      user: updateUser,
-    });
-  } catch (error) {
-    return res.status(400).json({ message: "cannot update user" });
-  }
+  //   return res.status(201).json({
+  //     message: `You're details are updated ${updateUser.username}`,
+  //     user: updateUser,
+  //   });
+  // } catch (error) {
+  //   return res.status(400).json({ message: "cannot update user" });
+  // }
+
+  console.log("files", req.files);
+  req.json({});
 };
 
 //delete user
