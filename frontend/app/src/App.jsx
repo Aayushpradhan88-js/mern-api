@@ -8,7 +8,7 @@ const App = () => {
     <div>
       <VoiceSerch/>
       {/* <Register /> */}
-      <Main />
+      {/* <Main /> */}
       {/* <Login /> */}
     </div>
   )
