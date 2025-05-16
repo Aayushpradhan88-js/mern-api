@@ -1,13 +1,15 @@
-import Login from "./pages/Login"
+// import Login from "./pages/Login"
 import Main from "./pages/main"
-import Register from "./pages/register"
+// import Register from "./pages/register"
+import VoiceSerch from "./components/voices/VoiceSerch"
 
 const App = () => {
   return (
     <div>
-      <Register />
+      <VoiceSerch/>
+      {/* <Register /> */}
       <Main />
-      <Login />
+      {/* <Login /> */}
     </div>
   )
 }

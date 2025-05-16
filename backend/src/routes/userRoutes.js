@@ -8,6 +8,7 @@ import {
   deleteUser,
 } from "../controllers/userController.js";
 import { upload } from "../middlewares/uploadController.js";
+import { voiceSearch } from "../controllers/voiceSearchController.js";
 
 const router = express.Router();
 
@@ -31,5 +32,6 @@ router.get("/details", getUsers);
 router.get("/details/:id", getUser);
 router.post("/upload", upload.single("coverImage"), updateUser);
 router.delete("/:id", deleteUser);
+router.get("/search", voiceSearch);
 
 export { router };

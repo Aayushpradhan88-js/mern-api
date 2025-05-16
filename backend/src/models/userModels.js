@@ -54,7 +54,6 @@ const userModel = new Schema(
 );
 
 //hashing password
-
 userModel.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 

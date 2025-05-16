@@ -1,4 +1,4 @@
-import { Voice } from "../models/voiceSearchModels"
+import { Voice } from "../models/voiceSearchModels.js"
 
 export const voiceSearch = async(req, res) => {
     const query = req.query.search
