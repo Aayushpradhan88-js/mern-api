@@ -2,49 +2,62 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chat ui</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Design</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-<div className="min-h-screen bg-gray-900 text-white flex flex-col">
-      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
-        <div>
-          <p className="font-semibold">Aayush Pradhan</p>
-          <p className="text-xs text-gray-400">Active 3h ago</p>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+
+  <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-blue-900 rounded-lg shadow-lg">
+      <div class="p-4 border-b border-gray-700 flex items-center">
+        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16h6"></path>
+        </svg>
+        <h2 class="text-xl font-bold">Personal Assistant</h2>
+      </div>
+      <div class="p-4 space-y-4 max-h-96 overflow-y-auto bg-blue-900">
+        <div class="flex items-start">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16h6"></path>
+          </svg>
+          <p class="text-gray-300">How can I assist you?</p>
         </div>
-        <div className="flex space-x-2">
-          <button className="text-red-500">📞</button>
-          <button className="text-red-500">🎥</button>
-          <button className="text-red-500">ℹ️</button>
+        <div class="flex justify-end">
+          <button class="bg-gray-600 text-white px-4 py-2 rounded">Hey, I'm having trouble with my account.</button>
+        </div>
+        <div class="flex items-start">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16h6"></path>
+          </svg>
+          <p class="text-gray-300">Hey, I'm having trouble with my account</p>
+        </div>
+        <div class="flex justify-end">
+          <button class="bg-gray-600 text-white px-4 py-2 rounded">I can't log in</button>
         </div>
       </div>
-      <div className="flex-1 p-4 overflow-y-auto bg-[url('https://example.com/dragon-background.jpg')] bg-cover bg-center relative" style={{ minHeight: 'calc(100vh - 200px)' }}>
-        {messages.map((msg) => (
-          <div key={msg.id} className={`mb-2 ${msg.isSelf ? 'text-right' : 'text-left'}`}>
-            <div className={`inline-block p-2 rounded-lg ${msg.isSelf ? 'bg-blue-600' : 'bg-gray-700'}`}>
-              <p className="text-sm">{msg.text}</p>
-              <p className="text-xs text-gray-400">{msg.time}</p>
-            </div>
-          </div>
-        ))}
+      <div class="p-4 border-t border-700">
+        <div class="flex items-center bg-gray-900 p-2 rounded-lg">
+          <input type="text" placeholder="Ask anything..." class="flex-1 bg-transparent text-white focus:outline-none">
+          <button class="ml-2 text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <form onSubmit={sendMessage} className="p-4 border-t border-gray-700 flex items-center">
-        <button className="text-gray-400 mr-2">+</button>
-        <button className="text-gray-400 mr-2">📎</button>
-        <button className="text-gray-400 mr-2">😊</button>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Aa"
-          className="flex-1 bg-gray-800 p-2 rounded-full text-white focus:outline-none"
-        />
-        <button type="submit" className="ml-2 text-red-500">➤</button>
-      </form>
     </div>
+  </body>
+
+</html>
+</body>
+
+</html>
 </body>
 
 </html>
