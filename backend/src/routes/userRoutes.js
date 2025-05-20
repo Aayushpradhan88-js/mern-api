@@ -10,6 +10,9 @@ import {
 import { upload } from "../middlewares/uploadController.js";
 import { voiceSearch } from "../controllers/voiceSearchController.js";
 
+// import { chatController } from "../controllers/chatControllers.js";
+import { aiController } from '../controllers/aiController.js'
+
 const router = express.Router();
 
 router.post(
@@ -28,10 +31,14 @@ router.post(
 );
 
 router.post("/login", loginUser);
+router.post("/upload", upload.single("coverImage"), updateUser);
+router.get("/search", voiceSearch)
+
+// router.get("/chat", aiController)
+router.get('/get-response', aiController)
+
+router.delete("/:id", deleteUser);
 router.get("/details", getUsers);
 router.get("/details/:id", getUser);
-router.post("/upload", upload.single("coverImage"), updateUser);
-router.delete("/:id", deleteUser);
-router.get("/search", voiceSearch);
 
 export { router };
