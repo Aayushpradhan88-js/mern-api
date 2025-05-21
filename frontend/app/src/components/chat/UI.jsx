@@ -1,6 +1,7 @@
 import React from 'react'
 
 export const UI = () => {
+  
   return (
     <div className="bg-gray-900 text-white flex items-center justify-center">
       {/* <div className="bg-gray-900 text-white flex items-center justify-center min-h-screen"> */}

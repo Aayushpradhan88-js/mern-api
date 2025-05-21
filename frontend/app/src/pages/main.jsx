@@ -1,5 +1,5 @@
 
-const Main = () => {
+export const Main = () => {
     return (
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">
@@ -7,11 +7,11 @@ const Main = () => {
                 <aside className="w-full md:w-1/5 bg-black border-r border-gray-800 p-4">
                     <div className="text-xl font-bold mb-8">LOGO</div>
                     <nav className="space-y-4">
-                        <a href="#" className="block">videos📹</a>
-                        <a href="#" className="block">tweets📝</a>
-                        <a href="#" className="block">likes💖</a>
-                        <a href="#" className="block">images🖼</a>
-                        <a href="#" className="block">files📁</a>
+                        <a href="#" className="block">videos</a>
+                        <a href="#" className="block">tweets</a>
+                        <a href="#" className="block">likes</a>
+                        <a href="#" className="block">images</a>
+                        <a href="#" className="block">files</a>
                         <a href="#" className="block">Logout</a>
                     </nav>
                 </aside>
@@ -102,9 +102,5 @@ const Main = () => {
                 </main>
             </div>
         </div>
-
-
     )
 }
-
-export default Main

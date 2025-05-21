@@ -76,12 +76,10 @@ const model = genAI.getGenerativeModel({
   `,
 });
 
-async function aiResponse(code) {
+export async function aiResponse(code) {
   const result = await model.generateContent(code);
 
   console.log(result.response.text());
 
   return result.response.text();
 }
-
-export { aiResponse };

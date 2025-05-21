@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "json-web-token";
-import cookie from "cookie";
 
 const userModel = new Schema(
   {

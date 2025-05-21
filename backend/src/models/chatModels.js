@@ -3,7 +3,12 @@ import mongoose, { Schema } from "mongoose";
 const chatModel = new Schema(
   {
     userId: String,
-    message: String,
+
+    message: {
+      type:String,
+      required: true
+    },
+
     isAI: {
       type: Boolean,
       default: false,

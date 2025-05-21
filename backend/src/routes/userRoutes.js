@@ -7,7 +7,7 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userController.js";
-import { upload } from "../middlewares/uploadController.js";
+import { upload } from "../middlewares/uploadMiddleware.js";
 import { voiceSearch } from "../controllers/voiceSearchController.js";
 
 // import { chatController } from "../controllers/chatControllers.js";

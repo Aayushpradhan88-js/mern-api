@@ -1,17 +1,18 @@
 import { useState } from 'react'
-import './App.css'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
-import useClipboard from "react-use-clipboard";
+import './App.css'
+import useClipboard from "react-use-clipboard"
 
 const VoiceSerch = () => {
 
-  const [textToCopy, setTextToCopy] = useState();
-  const [isCopied, setCopied] = useClipboard(textToCopy);
+  const [textToCopy, setTextToCopy] = useState()
+  const [isCopied, setCopied] = useClipboard(textToCopy)
 
   const startListening = () => SpeechRecognition.startListening({ continuous: true, language: "eng-US" })
-  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition()
 
-  if (!browserSupportsSpeechRecognition) return null
+  if (!browserSupportsSpeechRecognition) return 
+  
   /*
   unique feature 
   usersearch = computernetwork notes (own uploded file uploaded file)
@@ -19,7 +20,6 @@ const VoiceSerch = () => {
   */
 
   return (
-
     <div className="container">
       <h2>Speech to Text Converter</h2>
       <br />
@@ -37,7 +37,6 @@ const VoiceSerch = () => {
         </button>
         <button onClick={startListening}>Start Voice </button>
         <button onClick={SpeechRecognition.stopListening}>Stop Listening</button>
-
       </div>
     </div>
   )
