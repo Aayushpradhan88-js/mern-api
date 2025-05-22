@@ -9,9 +9,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
-console.log("api_key: ", process.env.CLOUDINARY_API_KEY)
-console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET)
+// console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
+// console.log("api_key: ", process.env.CLOUDINARY_API_KEY)
+// console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET)
 
 export const uploadOnCloudinary = async (localFilePath) => {
     try {
@@ -34,4 +34,4 @@ export const uploadOnCloudinary = async (localFilePath) => {
         return null;
     }
 }
-console.log(uploadOnCloudinary)
+// console.log(uploadOnCloudinary)
