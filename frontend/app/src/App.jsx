@@ -3,20 +3,21 @@
 // import Main from "./pages/main"
 // import Register from "./pages/register"
 // import VoiceSerch from "./components/voices/VoiceSerch"
-// import { UI } from "./components/chat/ui"
-import CodeReview from "./components/assistant/CodeReview"
+// import CodeReview from "./components/assistant/CodeReview"
+// import { Chat } from "./components/chat/Chat"
+import AppRoutes from "./routes/AppRoutes"
 const App = () => {
   return (
     <div>
-      <CodeReview/>
-      {/* <UI/> */}
+      <AppRoutes/>
+      {/* <Chat/> */}
+      {/* <CodeReview/> */}
       {/* <VoiceSerch/> */}
       {/* <Register /> */}
       {/* <Main /> */}
       {/* <Login /> */}
     </div>
   )
-}
-
+} 
 
 export default App
