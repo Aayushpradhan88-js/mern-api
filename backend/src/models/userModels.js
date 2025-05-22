@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "json-web-token";
@@ -37,7 +39,7 @@ const userModel = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Video",
     },
-
+    /*
     avatar: {
       type: String,
       required: true,
@@ -46,6 +48,7 @@ const userModel = new Schema(
     coverImage: {
       type: String,
     },
+    */
   },
   {
     timestamps: true,
@@ -61,76 +64,38 @@ userModel.pre("save", async function (next) {
 });
 
 //comparing password
-userModel.methods.validatePassword = async (password, hashedPassword) => {
-  try {
-    const validation = await bcrypt.compare(password, hashedPassword);
-    return validation;
-  } catch (error) {
-    return res.send(404).json({
-      message: "Incorrect Password",
-      error,
-    });
-  }
+userModel.methods.validatePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 //token generation
-userModel.methods.generateAccessToken = async (user) => {
-  try {
-    const accessToken = jwt.sign(
-      {
-        _id: user._id,
-        username: user.username,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        password: user.password,
-      },
-      process.env.ACCESS_TOKEN_SECRET_KEY,
-      {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-      }
-    );
-    return accessToken;
-  } catch (error) {
-    return res.send(501).json({
-      message: "Token is not created",
-      error: error.message,
-    });
-  }
-};
 
-//Refresh Token
-userModel.methods.generateRefreshToken = async () => {
-  try {
-    const refreshToken = jwt.sign(
-      {
-        _id: this._id,
-      },
-      process.env.REFRESH_TOKEN_SECRET_KEY,
-      {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-      }
-    );
-    return refreshToken;
-  } catch (error) {
-    return res.send(501).json({
-      message: "Refreshtoken is not created",
-      error: error.message,
-    });
-  }
+//AccessToken
+userModel.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      username: this.username,
+      firstname: this.firstname,
+      lastname: this.lastname,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
 };
-
-//token verification
-userModel.methods.tokenVerification = async (validtoken) => {
-  try {
-    const validToken = jwt.verify(validtoken, process.env.JWT_SECRET_KEY);
-    return validToken;
-  } catch (error) {
-    return res.send(408).json({
-      message: "Token is not valid, check you're token",
-      error,
-    });
-  }
+userModel.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
 };
 
 export const User = mongoose.model("User", userModel);

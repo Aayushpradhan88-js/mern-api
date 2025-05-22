@@ -9,33 +9,32 @@ import {
 } from "../controllers/userController.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
 import { voiceSearch } from "../controllers/voiceSearchController.js";
-
-// import { chatController } from "../controllers/chatControllers.js";
-import { aiController } from '../controllers/aiController.js'
-
+// import { aiController } from "../controllers/aiController.js";
+// import { assistanceController } from "../controllers/assistanceController.js";
 const router = express.Router();
 
 router.post(
   "/register",
+  /*
   upload.fields([
-    { 
+    {
       name: "avatar",
-      maxCount: 1 
+      maxCount: 1,
     },
-    { 
-      name: "coverImage", 
-      maxCount: 1 
+    {
+      name: "coverImage",
+      maxCount: 1,
     },
   ]),
+  */
   registerUser
 );
 
 router.post("/login", loginUser);
 router.post("/upload", upload.single("coverImage"), updateUser);
-router.get("/search", voiceSearch)
-
-// router.get("/chat", aiController)
-router.get('/get-response', aiController)
+router.get("/search", voiceSearch);
+// router.get("/ai-response", aiController);
+// router.post("/assistance", assistanceController);
 
 router.delete("/:id", deleteUser);
 router.get("/details", getUsers);
