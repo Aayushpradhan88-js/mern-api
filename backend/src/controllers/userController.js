@@ -18,8 +18,7 @@ export const registerUser = async (req, res) => {
     }
 
     const existingUser = await User.findOne({
-      $or: [{ username }, { email }],
-    });
+      $or: [{ username }, { email }],    });
 
     if (existingUser) {
       throw new ApiError(
