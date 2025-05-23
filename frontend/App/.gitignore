@@ -13,10 +13,8 @@ dist-ssr
 *.local
 
 vite.config.js
-package-lock.json
 eslint.config.js
 .env
-package.json
 README.md
 
 # Editor directories and files
