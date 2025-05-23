@@ -53,13 +53,13 @@ export const Home = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>What is MCP and why you should pay attention </p>
+                            <p>『Bro Think I am His Pookie😭🏃‍♂️』『MADE IN CAPCUT』#manga#aizen </p>
                             <div className="text-xs text-red-400">private</div>
                             {/* <div className="text-xs text-red-400">private</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Complete Backend development with NodeJS - 1</p>
+                            <p>Titok Reel scrolling master class by Bhumika Xeetri  </p>
                             <div className="text-xs text-green-400">public</div>
                             {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
