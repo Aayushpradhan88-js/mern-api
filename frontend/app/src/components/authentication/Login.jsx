@@ -1,73 +1,78 @@
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import {axiosInstance} from '../../config/axios'
 
 export const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
 
-    const handleSubmit = async (e) => {
+    const [email, setEmail] = useState('')
+    const [password, SetPassword] = useState('')
+
+    const navigate = useNavigate()
+
+    function submitHandler(e) {
+
         e.preventDefault()
-        const response = await fetch("http://localhost:5000/api/v2/users/login-user", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                password
-            })
+
+        axiosInstance.post('/api/v2/user/login', {
+            email,
+            password
+        }).then(res => {
+            console.log(res.data)
+            navigate('/') //navigate: homepage
+        }).catch(err => {
+            console.log(err.res.data)
         })
-        const data = await response.json()
-        if (!response.ok) throw new Error(data.message)
-        alert("You're are logged in")
     }
 
-
     return (
-        <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-            {/* <!--Login container--> */}
-            <div className="bg-[#7ad3f62a] flex rounded-2xl shadow-lg max-w-3xl p-4">
-                {/* <!--Form--> */}
-                <div className="sm:w-1/2 px-1">
-                    <h2 className="font-bold text-2xl text-[#4527a5] text-center">Login</h2>
-                    <p className="text-sm mt-7 text-[#6c57b1] text-opacity-70 text-center">If you already a member, easily log
-                        in</p>
-                    {/* <!--Data entry group--> */}
-                    <form className="flex flex-col gap-4" action="" onSubmit={handleSubmit}>
-                        <input className="p-2 mt-8 rounded-xl border" type="text" name="email" placeholder="Your email" onChange={(e) => setEmail(e.target.value)} />
-                        <div className="relative">
-                            <input className="p-2 mt-8 rounded-xl border w-full" type="password" name="password"
-                                placeholder="Your password" onChange={(e) => setPassword(e.target.value)} />
-                            <p className="mt-5 text-xs border-b border-gray-400 py-4">
-                                <a href="">Forgot Your password?</a>
-                            </p>
-                        </div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-900">
+            <div className="bg-gray-800 text-white rounded-2xl p-8 w-full max-w-md shadow-lg">
+                <h2 className="text-3xl font-bold text-purple-500 text-center mb-2">Login</h2>
+                <p className="text-center text-purple-300 mb-6">If you already a member, easily log in</p>
+                <form onSubmit={submitHandler}>
+                    <input
+                        onClick={(e) => setEmail(e.preventDefault)}
 
-                        <button className="Login-button rounded-xl text-white py-2">Login</button>
-                    </form>
+                        type="email"
+                        placeholder="Your email"
+                        className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
 
-                    <div className="mt-10 grid grid-cols-3 items-center text-gray-400">
-                        <hr className="border-gray-400" />
-                        <p className="text-center text-sm">OR</p>
-                        <hr className="border-gray-400" />
+                    <input
+                        onClick={(e) => setEmail(e.preventDefault)}
+
+                        type="password"
+                        placeholder="Your password"
+                        className="w-full p-3 mb-2 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+
+                    <div className="text-right text-sm text-purple-300 mb-6">
+                        <a href="#" className="hover:underline">Forgot your password?</a>
                     </div>
 
-                    <button className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center text-sm">
-                        <img className="w-6 mr-3 mt-1"
-                            src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/master/pass/google-logo.jpg"
-                            alt="" />
-                        Login width Google
+                    <button className="w-full bg-purple-600 hover:bg-purple-700 transition-colors p-3 rounded-lg font-semibold mb-6">
+                        Login
                     </button>
+                </form>
 
+                <div className="flex items-center justify-between mb-6">
+                    <span className="border-b border-gray-600 w-1/4"></span>
+                    <span className="text-gray-400">OR</span>
+                    <span className="border-b border-gray-600 w-1/4"></span>
+                </div>
 
-                    <div className="mt-3 text-xs flex justify-between items-cente">
-                        <p>
-                            <a href="#">If you dont't have an account?</a>
-                        </p>
-                        <button className="py-2 px-5 bg-white border rounded-xl">Register</button>
-                    </div>
+                <button className="w-full flex items-center justify-center bg-black border border-white p-3 rounded-lg hover:bg-white hover:text-black transition-colors mb-4">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 mr-2" />
+                    Login with Google
+                </button>
+
+                <div className="text-center text-sm">
+                    <span>If you don't have an account?</span>
+                    <a href="#" className="ml-2 text-purple-400 hover:underline font-semibold">Register</a>
                 </div>
             </div>
-        </section>
+        </div>
+
     )
 }
 

@@ -11,24 +11,10 @@ import { upload } from "../middlewares/uploadMiddleware.js";
 import { voiceSearch } from "../controllers/voiceSearchController.js";
 // import { aiController } from "../controllers/aiController.js";
 // import { assistanceController } from "../controllers/assistanceController.js";
+
 const router = express.Router();
 
-router.post(
-  "/register",
-  /*
-  upload.fields([
-    {
-      name: "avatar",
-      maxCount: 1,
-    },
-    {
-      name: "coverImage",
-      maxCount: 1,
-    },
-  ]),
-  */
-  registerUser
-);
+router.post("/register",registerUser);
 
 router.post("/login", loginUser);
 router.post("/upload", upload.single("coverImage"), updateUser);

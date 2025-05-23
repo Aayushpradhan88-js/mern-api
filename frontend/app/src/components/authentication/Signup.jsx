@@ -1,85 +1,97 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../../config/axios'
 
 export const Register = () => {
-    // const [data, setData] = useState([])
+
     const [username, setUsername] = useState('')
-    const [fullname, setFullname] = useState('')
-    const [lastname, setLastname] = useState('')
+    const [fullname, setFullName] = useState('')
+    const [lastname, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    
-    //Submit logic
-    const handleSubmit = async (e) => {
+
+    const navigate = useNavigate()
+
+    function SubmitHandler(e) {
         e.preventDefault()
-        try {
-            const res = await fetch("http://localhost:5000/api/v2/users/register-user", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username,
-                    fullname,
-                    lastname,
-                    email,
-                    password
-                })
-            })
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.message)
-            alert("You're Successfully registered")
-        } catch (error) {
-            alert(error.message)
-        }
+
+        axiosInstance.post('/api/v2/user/register', {
+            username,
+            fullname,
+            lastname,
+            email,
+            password
+        }).then(res => {
+            console.log(res.data)
+            navigate('/')
+        }).catch((err) => {
+            console.log(err.res.data)
+        })
+
     }
-
     return (
-        <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-            {/* <!--Register container--> */}
-            <div className="bg-[#7ad3f62a] flex rounded-2xl shadow-lg max-w-3xl p-9">
-                {/* <!--Form--> */}
-                <div className="sm:w-1/2 px-1">
-                    <h2 className="font-bold text-2xl text-[#4527a5] text-center">Register </h2>
-                    {/* <!--Data entry group--> */}
-                    <form className="flex flex-col gap-4" action="" onSubmit={handleSubmit}>
-                        {/* <!-- <h1 className="p-4 mt-7 font-bold">Username</h1> --> */}
-                        <input className="p-2 mt-13 rounded-xl border" type="text" name="username" placeholder="create username" onChange={(e) => setUsername(e.target.value)} />
-                        {/* <!-- <h1 className="p-4  font-bold">Username</h1> --> */}
-                        <input className="p-2 mt-3 rounded-xl border" type="text" name="fullname" placeholder="create fullname" onChange={(e) => setFullname(e.target.value)} />
-                        <input className="p-2 mt-3 rounded-xl border" type="text" name="lastname" placeholder="create lastname" onChange={(e) => setLastname(e.target.value)} />
-                        <input className="p-2 mt-3 rounded-xl border" type="text" name="email" placeholder="create email" onChange={(e) => setEmail(e.target.value)} />
-                        <div className="relative">
-                            <input className="p-2 mt-3 rounded-xl border w-full" type="password" name="password"
-                                placeholder="create password" onChange={(e) => setPassword(e.target.value)} />
-                        </div>
-                    <button className="Login-button rounded-xl text-white py-2 cursor-pointer" type='Submit'>SignUp</button>
-                    </form>
+        < div className="min-h-screen flex items-center justify-center bg-gray-900" >
+            <div className="bg-gray-800 text-white rounded-2xl p-8 w-full max-w-md shadow-lg">
+                <h2 className="text-3xl font-bold text-purple-500 text-center mb-6">Register</h2>
 
-                    {/* <form /> */}
+                <form onSubmit={SubmitHandler} >
+                    <input
+                        onClick={(e) => setUsername(e.target.value)}
+                        type="text"
+                        placeholder="Username"
+                        className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
 
-                    <div className="mt-10 grid grid-cols-3 items-center text-gray-400">
-                        <hr className="border-gray-400" />
-                        <p className="text-center text-sm">OR</p>
-                        <hr className="border-gray-400" />
-                    </div>
+                    <input
+                        onClick={(e) => setFullName(e.target.value)}
+                        type="text"
+                        placeholder="Full Name"
+                        className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
 
-                    <button className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center text-sm">
-                        <img className="w-6 mr-3 mt-1 cursor-pointer"
-                            src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/master/pass/google-logo.jpg"
-                            alt="" />
-                        Login with Google
+                    <input
+                        onClick={(e) => setLastName(e.target.value)}
+                        type="text"
+                        placeholder="Last Name"
+                        className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+
+                    <input
+                        onClick={(e) => setEmail(e.target.value)}
+                        type="email"
+                        placeholder="Email"
+                        className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+
+                    <input
+                        onClick={(e) => setPassword(e.target.value)}
+                        type="password"
+                        placeholder="Password"
+                        className="w-full p-3 mb-6 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+
+                    <button className="w-full bg-purple-600 hover:bg-purple-700 transition-colors p-3 rounded-lg font-semibold mb-6">
+                        Sign Up
                     </button>
+                </form>
 
+                <div className="flex items-center justify-between mb-6">
+                    <span className="border-b border-gray-600 w-1/4"></span>
+                    <span className="text-gray-400">OR</span>
+                    <span className="border-b border-gray-600 w-1/4"></span>
+                </div>
 
-                    <div className="mt-3 text-xs flex justify-between items-cente cursor-pointer">
-                        <p>
-                            <a href="#">If you have an account?</a>
-                        </p>
-                        <button className="py-2 px-5 bg-white border rounded-xl">Login</button>
-                    </div>
+                <button className="w-full flex items-center justify-center bg-black border border-white p-3 rounded-lg hover:bg-white hover:text-black transition-colors mb-4">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 mr-2" />
+                    Login with Google
+                </button>
+
+                <div className="text-center text-sm">
+                    <span>If you already have an account?</span>
+                    <a href="#" className="ml-2 text-purple-400 hover:underline font-semibold">Login</a>
                 </div>
             </div>
+        </div >
 
-        </div>
     )
 }
