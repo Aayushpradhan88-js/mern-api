@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom" 
+import { Link } from "react-router-dom"
 
 export const Home = () => {
     return (
@@ -9,7 +9,7 @@ export const Home = () => {
                 {/* <!-- Sidebar --> */}
                 <aside className="w-full md:w-1/5 bg-black border-r border-gray-800 p-4">
 
-                {/* Company Logo */}
+                    {/* Company Logo */}
                     <div className="text-xl font-bold mb-8">LOGO</div>
                     <nav className="space-y-4">
                         <a href="#" className="block">videos</a>
@@ -43,11 +43,23 @@ export const Home = () => {
                             </button>
                         </div>
 
-                        {/* upload */}
-                        <div className="flex items-center gap-2">
-                            <button className="bg-white text-black px-3 py-1 rounded">+ upload</button>
-                            <div className="w-8 h-8 rounded-full bg-blue-700"></div>
+
+
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                            <button className="px-4 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-700">
+                                <Link to="Upload">Upload</Link>
+
+                            </button>
+                            <button className="px-4 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                <Link to="register">Register</Link>
+                            </button>
+                            <button className="px-4 py-1 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                <Link to="login">Login</Link>
+
+                            </button>
                         </div>
+
+
                     </div>
 
                     {/* <!-- Cards Section --> */}
@@ -94,7 +106,7 @@ export const Home = () => {
                     <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
                         <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2">
                             <Link to='assistance-ai'>Assistant</Link>
-                            
+
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

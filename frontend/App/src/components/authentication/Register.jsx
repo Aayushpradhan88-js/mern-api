@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, Route, useNavigate } from 'react-router-dom'
-import {axiosInstance as axios} from '../../config/axios'
+// import {axiosInstance as axios} from '../../config/axios'
+import axios from 'axios'
 import Login from './Login'
 
 export const Register = () => {
@@ -16,7 +17,7 @@ export const Register = () => {
     function SubmitHandler(e) {
         e.preventDefault()
 
-        axios.post('/api/user/register', {
+        axios.post('http://localhost:4000/api/user/register', {
             username,
             fullname,
             lastname,
@@ -88,10 +89,17 @@ export const Register = () => {
                     Login with Google
                 </button>
 
+
                 <div className="text-center text-sm">
                     If you already have an account?
                     <Link to="/login" className="ml-2 text-purple-400 hover:underline font-semibold">Login</Link>
                 </div>
+                <button
+                    className="py  mt-4 text-sm text-gray-400 hover:underline"
+                >
+                    <Link to="/"> ← Back</Link>
+                    
+                </button>
             </div>
         </div >
 

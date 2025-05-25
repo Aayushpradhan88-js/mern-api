@@ -68,27 +68,24 @@ export const Login = () => {
 
                 <button className="w-full flex items-center justify-center bg-black border border-white p-3 rounded-lg hover:bg-white hover:text-black transition-colors mb-4">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 mr-2" />
-                    onClick={(e) => e.loginWithRedirect()}
+                    {/* onClick={(e) => e.loginWithRedirect()} */}
                     Login with Google
                 </button>
 
                 <div className="text-center text-sm">
                     If you don't have an account? <Link to="/register" className="ml-2 text-purple-400 hover:underline font-semibold">Register</Link>
                 </div>
+
+                 <button
+                    className="py  mt-4 text-sm text-gray-400 hover:underline"
+                >
+                    <Link to="/"> ← Back</Link>
+                    
+                </button>
             </div>
         </div>
 
     )
 }
 
-// import { useAuth0 } from "@auth0/auth0-react";
-// import React from "react";
-
-// const LoginButton = () => {
-//   const { loginWithRedirect } = useAuth0();
-
-//   return <button onClick={() => loginWithRedirect()}>Log In</button>;
-// };
-
-// // export default LoginButton;
 export default Login
