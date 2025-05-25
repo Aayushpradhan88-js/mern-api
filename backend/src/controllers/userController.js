@@ -18,7 +18,8 @@ export const registerUser = async (req, res) => {
     }
 
     const existingUser = await User.findOne({
-      $or: [{ username }, { email }],    });
+      $or: [{ username }, { email }],
+    });
 
     if (existingUser) {
       throw new ApiError(
@@ -99,41 +100,32 @@ export const registerUser = async (req, res) => {
 //login user
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email)
   try {
     if ([email, password].some((field) => field?.trim === "")) {
-      return res.status(401).json({
-        message: "Please fill all the fields",
-      });
+      throw new ApiError(400, "All Fields are required");
     }
 
     const isEmailValid = await User.findOne({ email });
-    if (isEmailValid) throw new Error("Invalid email or password");
+    if (!isEmailValid) throw new ApiError("Invalid email");
 
-    const isPasswordValid = await User.validatePassword(password);
-    if (isPasswordValid) throw new Error("Invalid email or password");
-
-    const { accessToken, refreshToken } =
-      await generateAccessTokenAndRefreshToken(isEmailValid._id);
+    const isPasswordValid = await isEmailValid.validatePassword(password);
+    if (!isPasswordValid) throw new ApiError("Invalid email or password");
 
     const loggedIn = await User.findById(isEmailValid._id).select("-password");
 
-    //cookie
-    const options = {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-    };
-
     return res
-      .status(401)
-      .cookie("ACCESSTOKEN", accessToken, options)
-      .cookie("REFRESHTOKEN", refreshToken, options)
-      .json({
-        message: "Successfully logged in",
-        user: loggedIn,
-        accessToken,
-        refreshToken,
-      });
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            // user: loggedIn,
+            isEmailValid: loggedIn,
+          },
+          "Successfully logged in"
+        )
+      );
   } catch (error) {
     return res.status(401).json({
       message: "Unauthorized User",
