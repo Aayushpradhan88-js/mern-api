@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {axiosInstance} from '../../config/axios'
+// import { useAuth0 } from '@auth0/auth0-react'
+import { axiosInstance as axios } from '../../config/axios'
 
 export const Login = () => {
 
     const [email, setEmail] = useState('')
-    const [password, SetPassword] = useState('')
+    const [password, setPassword] = useState('')
 
     const navigate = useNavigate()
 
@@ -13,17 +14,21 @@ export const Login = () => {
 
         e.preventDefault()
 
-        axiosInstance.post('/api/v2/user/login', {
+        axios.post('/api/user/login', {
             email,
             password
         }).then(res => {
             console.log(res.data)
             navigate('/') //navigate: homepage
         }).catch(err => {
-            console.log(err.res.data)
+            console.log(err.response.data)
         })
     }
 
+
+    // const { user, loginWithRedirect } = useAuth0();
+    // console.log("user", user)
+    
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-gray-800 text-white rounded-2xl p-8 w-full max-w-md shadow-lg">
@@ -31,7 +36,7 @@ export const Login = () => {
                 <p className="text-center text-purple-300 mb-6">If you already a member, easily log in</p>
                 <form onSubmit={submitHandler}>
                     <input
-                        onClick={(e) => setEmail(e.preventDefault)}
+                        onChange={(e) => setEmail(e.target.value)}
 
                         type="email"
                         placeholder="Your email"
@@ -39,7 +44,7 @@ export const Login = () => {
                     />
 
                     <input
-                        onClick={(e) => setEmail(e.preventDefault)}
+                        onChange={(e) => setPassword(e.target.value)}
 
                         type="password"
                         placeholder="Your password"
@@ -63,12 +68,12 @@ export const Login = () => {
 
                 <button className="w-full flex items-center justify-center bg-black border border-white p-3 rounded-lg hover:bg-white hover:text-black transition-colors mb-4">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 mr-2" />
+                    onClick={(e) => e.loginWithRedirect()}
                     Login with Google
                 </button>
 
                 <div className="text-center text-sm">
-                    <span>If you don't have an account?</span>
-                    <a href="#" className="ml-2 text-purple-400 hover:underline font-semibold">Register</a>
+                    If you don't have an account? <Link to="/register" className="ml-2 text-purple-400 hover:underline font-semibold">Register</Link>
                 </div>
             </div>
         </div>
@@ -76,4 +81,14 @@ export const Login = () => {
     )
 }
 
+// import { useAuth0 } from "@auth0/auth0-react";
+// import React from "react";
+
+// const LoginButton = () => {
+//   const { loginWithRedirect } = useAuth0();
+
+//   return <button onClick={() => loginWithRedirect()}>Log In</button>;
+// };
+
+// // export default LoginButton;
 export default Login

@@ -62,6 +62,8 @@ export const Chat = () => {
           Personal Assistant
         </div>
 
+        
+
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {messages.map((msg, i) => (

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { axiosInstance } from '../../config/axios'
+import { Link, Route, useNavigate } from 'react-router-dom'
+import {axiosInstance as axios} from '../../config/axios'
+import Login from './Login'
 
 export const Register = () => {
 
@@ -15,7 +16,7 @@ export const Register = () => {
     function SubmitHandler(e) {
         e.preventDefault()
 
-        axiosInstance.post('/api/v2/user/register', {
+        axios.post('/api/user/register', {
             username,
             fullname,
             lastname,
@@ -25,7 +26,8 @@ export const Register = () => {
             console.log(res.data)
             navigate('/')
         }).catch((err) => {
-            console.log(err.res.data)
+            console.log(err.response.data)
+
         })
 
     }
@@ -36,41 +38,41 @@ export const Register = () => {
 
                 <form onSubmit={SubmitHandler} >
                     <input
-                        onClick={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                         type="text"
                         placeholder="Username"
                         className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
                     <input
-                        onClick={(e) => setFullName(e.target.value)}
+                        onChange={(e) => setFullName(e.target.value)}
                         type="text"
                         placeholder="Full Name"
                         className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
                     <input
-                        onClick={(e) => setLastName(e.target.value)}
+                        onChange={(e) => setLastName(e.target.value)}
                         type="text"
                         placeholder="Last Name"
                         className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
                     <input
-                        onClick={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         type="email"
                         placeholder="Email"
                         className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
                     <input
-                        onClick={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         type="password"
                         placeholder="Password"
                         className="w-full p-3 mb-6 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
-                    <button className="w-full bg-purple-600 hover:bg-purple-700 transition-colors p-3 rounded-lg font-semibold mb-6">
+                    <button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 transition-colors p-3 rounded-lg font-semibold mb-6">
                         Sign Up
                     </button>
                 </form>
@@ -87,8 +89,8 @@ export const Register = () => {
                 </button>
 
                 <div className="text-center text-sm">
-                    <span>If you already have an account?</span>
-                    <a href="#" className="ml-2 text-purple-400 hover:underline font-semibold">Login</a>
+                    If you already have an account?
+                    <Link to="/login" className="ml-2 text-purple-400 hover:underline font-semibold">Login</Link>
                 </div>
             </div>
         </div >

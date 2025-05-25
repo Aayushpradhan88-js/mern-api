@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom" 
 
 export const Home = () => {
     return (
@@ -53,19 +54,19 @@ export const Home = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>『Bro Think I am His Pookie😭🏃‍♂️』『MADE IN CAPCUT』#manga#aizen </p>
+                            <p> Valuation Master Class by Sanjeeb kothi | RS:- 10,000  </p>
                             <div className="text-xs text-red-400">private</div>
                             {/* <div className="text-xs text-red-400">private</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Titok Reel scrolling master class by Bhumika Xeetri  </p>
+                            <p>Tiktok Reel scrolling master class by Bhumika Xeetri | RS:- 9,999 </p>
                             <div className="text-xs text-green-400">public</div>
                             {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
                         <div className="bg-gray-800 p-4 rounded">
                             <div className="h-32 bg-gray-700 rounded mb-2"></div>
-                            <p>Complete Backend development with NodeJS - 2</p>
+                            <p>Complete MERN development by Aayush Pradhan | RS:- 30,000</p>
                             <div className="text-xs text-green-400">public</div>
                             {/* <div className="text-xs text-green-400">public</div> */}
                         </div>
@@ -92,7 +93,8 @@ export const Home = () => {
                     {/* <!-- Chat icon --> */}
                     <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
                         <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2">
-                            chat
+                            <Link to='assistance-ai'>Assistant</Link>
+                            
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
