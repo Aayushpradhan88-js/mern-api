@@ -1,4 +1,3 @@
-// import { app } from "../app.js"
 import { WebSocketServer } from "ws"
 import axios from "axios"
 import http from "http"
