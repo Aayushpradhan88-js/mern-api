@@ -7,19 +7,23 @@ import Login from './Login'
 export const Register = () => {
 
     const [username, setUsername] = useState('')
-    const [fullname, setFullName] = useState('')
+    const [firstname, setFirsName] = useState('')
     const [lastname, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const navigate = useNavigate()
 
-    function SubmitHandler(e) {
-        e.preventDefault()
+    const SubmitHandler = async (data) => {
+        // e.preventDefault()
 
-        axios.post('http://localhost:4000/api/user/register', {
+        await axios.get('http://localhost:4000/api/register', data, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json"
+            },
             username,
-            fullname,
+            firstname,
             lastname,
             email,
             password
@@ -98,7 +102,7 @@ export const Register = () => {
                     className="py  mt-4 text-sm text-gray-400 hover:underline"
                 >
                     <Link to="/"> ← Back</Link>
-                    
+
                 </button>
             </div>
         </div >

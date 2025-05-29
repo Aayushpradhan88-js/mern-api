@@ -17,7 +17,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const router = express.Router();
 
-router.post("/register",registerUser);
+router.get("/register",registerUser);
 
 router.post("/login", loginUser);
 router.post("/upload", upload.single("coverImage"), (req, res) => {
