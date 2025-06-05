@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Upload = () => {
+export const Upload = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [uploadType, setUploadType] = useState("");
 
@@ -73,5 +73,3 @@ const Upload = () => {
         </div>
     );
 }
-
-export {Upload}

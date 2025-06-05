@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 export const UploadContext = React.createContext(
-    {
-        upload: [
+    {   
+        uploads: [
             {
                 id: 1,
                 upload: "upload msg",
@@ -16,7 +17,7 @@ export const UploadContext = React.createContext(
     }
 )
 
-export const Upload = () => {
+export const useUpload = () => {
     return React.useContext(UploadContext)
 }
 
