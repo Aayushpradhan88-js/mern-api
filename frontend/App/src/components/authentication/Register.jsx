@@ -50,7 +50,7 @@ export const Register = () => {
                     />
 
                     <input
-                        onChange={(e) => setFullName(e.target.value)}
+                        onChange={(e) => setFirsName(e.target.value)}
                         type="text"
                         placeholder="Full Name"
                         className="w-full p-3 mb-4 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"

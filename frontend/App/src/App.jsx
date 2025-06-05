@@ -1,8 +1,9 @@
-import AppRoutes from './routes/AppRoutes'
+// import UI from './components/UI'
+import {AppRoutes} from './routes/AppRoutes'
 
 function App() {
   return (
-    <AppRoutes />
+    <AppRoutes  />
   )
 }
 
