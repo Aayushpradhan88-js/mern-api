@@ -35,10 +35,12 @@ const userModel = new Schema(
       kMaxLength: [6, "At least 6 symbols, letters, dots, numbers combination"],
     },
 
-    watchHistory: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Video",
-    },
+    //FUTURE
+    
+    // watchHistory: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Video",
+    // },
     /*
     avatar: {
       type: String,
@@ -55,6 +57,8 @@ const userModel = new Schema(
   }
 );
 
+//FUTURE
+/*
 //hashing password
 userModel.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -69,6 +73,6 @@ userModel.methods.validatePassword = async function (password) {
 };
 
 //token generation
-
+*/
 
 export const User = mongoose.model("User", userModel);

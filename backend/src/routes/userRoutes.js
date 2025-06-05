@@ -1,24 +1,18 @@
 import express from "express";
 import {
   registerUser,
-  loginUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
 } from "../controllers/userController.js";
-import { upload } from "../middlewares/uploadMiddleware.js";
-import { voiceSearch } from "../controllers/voiceSearchController.js";
-// import { aiController } from "../controllers/aiController.js";
-// import { assistanceController } from "../controllers/assistanceController.js";
+
 
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const router = express.Router();
 
-router.get("/register",registerUser);
+router.post("/register",registerUser);
 
+//FUTURE
+/*
 router.post("/login", loginUser);
 router.post("/upload", upload.single("coverImage"), (req, res) => {
   if(!req.file) {
@@ -45,5 +39,6 @@ router.get("/search", voiceSearch);
 router.delete("/:id", deleteUser);
 router.get("/details", getUsers);
 router.get("/details/:id", getUser);
+*/
 
 export { router };

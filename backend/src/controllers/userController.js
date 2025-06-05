@@ -1,102 +1,79 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { User } from "../models/userModels.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+
+//TEMPORARY IMPORT PACKAGES
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// console.log(process.env.JWT_SECRET_KEY)
+
+//FOR FUTURE
+// import { uploadOnCloudinary } from "../utils/cloudinary.js";
+
 
 //Registering User
 export const registerUser = async (req, res) => {
   const { username, firstname, lastname, email, password } = req.body;
-  try {
-    if (
-      [username, firstname, lastname, email, password].some(
-        (field) => field?.trim === ""
+
+  if (
+    [username, firstname, email, password].some((field) => field?.trim() === "")
+  ) {
+    throw new error(401, "All fields are required");
+  };
+
+  const existedUser = await User.findOne({ 
+    $or: [{username}, {email}]
+   });
+
+  if (existedUser) {
+    throw new ApiError(401, "Already taken try another");
+  };
+  console.log(req.files)
+
+  const newUser = await User.create({
+    username,
+    firstname,
+    lastname,
+    email,
+    password
+  })
+
+  const userHash = await bcrypt.hash(password, 10);
+
+  if (!userHash) {
+    throw new ApiError(500, "Password is not hashed");
+  };
+
+  const token = jwt.sign(
+    {
+      _id: newUser._id,
+      email: newUser.email,
+      username: newUser.username,
+    },
+    process.env.JWT_SECRET_KEY
+
+  );
+  // console.log(process.env.JWT_SECRET_KEY)
+
+  const createdUser = await User.findById(newUser._id).select("-password");
+
+  return res
+    .status(201)
+    .cookie("token", token)
+    .json(
+      new ApiResponse(
+        201,
+        { user: createdUser, token },
+        "User registered successfully"
       )
-    ) {
-      throw new ApiError(400, "All Fields are required");
-    }
-
-    const existingUser = await User.findOne({
-      $or: [{ username }, { email }],
-    });
-
-    if (existingUser) {
-      throw new ApiError(
-        400,
-        `Username: ${existingUser.username} or email is already exist`
-      );
-    }
-
-    // const avatarLocalPath = req.files?.avatar[0]?.path
-    //const coverImageLocalPath = req.files?.coverImage[0]?.path
-    /*
-    let coverImageLocalPath
-    if (
-      req.files &&
-      Array.isArray(req.files.coverImage) &&
-      req.files.coverImage.length > 0
-    ) {
-      coverImageLocalPath = req.files.coverImage[0].path
-    }
-
-    if (!avatarLocalPath) {
-      return res.status(400).json({ message: "Avatar file is required" })
-    }
-
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
-
-    if (!avatar) {
-      return res.status(400).json({ message: "Avatar file is required" })
-    }
-*/
-    const registeredUser = await User.create({
-      username: username.toLowerCase(),
-      firstname,
-      lastname,
-      /*
-      avatar: avatar.url,
-      coverImage: coverImage?.url || "",
-      */
-      email,
-      password,
-    });
-    console.log(registeredUser);
-
-    const createdUser = await User.findById(registeredUser._id).select(
-      "-password "
     );
-    console.log(createdUser);
 
-    if (!createdUser) {
-      throw new ApiError(500, "Something went wrong while registering user");
-    }
-
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
-    return res
-      .status(201)
-      .json(
-        new ApiResponse(
-          200,
-          {
-            registeredUser: createdUser
-          },
-          "User has been successfully"
-        )
-      );
-  } catch (error) {
-    return res.status(501).json({
-      message: "User not created check all the fields ",
-      error: error.message,
-    });
-  }
 };
 
+/*
 //login user
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -225,3 +202,4 @@ export const deleteUser = async (req, res) => {
     return res.status(501).json({ message: "cannot delete user" });
   }
 };
+*/
