@@ -32,20 +32,20 @@ export const registerUser = async (req, res) => {
     throw new ApiError(401, "Already taken try another");
   };
   console.log(req.files)
+  
+  const userHash = await bcrypt.hash(password, 10);
+
+  if (!userHash) {
+    throw new ApiError(500, "Password is not hashed");
+  };
 
   const newUser = await User.create({
     username,
     firstname,
     lastname,
     email,
-    password
+    password: userHash
   })
-
-  const userHash = await bcrypt.hash(password, 10);
-
-  if (!userHash) {
-    throw new ApiError(500, "Password is not hashed");
-  };
 
   const token = jwt.sign(
     {
@@ -53,12 +53,13 @@ export const registerUser = async (req, res) => {
       email: newUser.email,
       username: newUser.username,
     },
-    process.env.JWT_SECRET_KEY
+    process.env.JWT_SECRET_KEY,
+     { expiresIn: '1d' }
 
   );
   // console.log(process.env.JWT_SECRET_KEY)
 
-  const createdUser = await User.findById(newUser._id).select("-password");
+  const createdUser = await User.findById(newUser._id)
 
   return res
     .status(201)
@@ -67,7 +68,8 @@ export const registerUser = async (req, res) => {
       new ApiResponse(
         201,
         { user: createdUser, token },
-        "User registered successfully"
+        "User registered successfully",
+        token
       )
     );
 

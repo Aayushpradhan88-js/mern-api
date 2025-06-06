@@ -11,4 +11,9 @@ app.use(express.json({ limit: "16kb" }));
 
 app.use("/api", userRoutes);
 
+
+app.get("/", (req, res) => {
+    res.send("Welcome to Backend")
+})
+
 export { app }
