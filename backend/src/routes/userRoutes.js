@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import {
   registerUser,
+  loginUser
 } from "../controllers/userController.js";
 
 
@@ -10,10 +13,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const router = express.Router();
 
 router.post("/register",registerUser);
+router.post("/login", loginUser);
 
 //FUTURE
 /*
-router.post("/login", loginUser);
 router.post("/upload", upload.single("coverImage"), (req, res) => {
   if(!req.file) {
     throw new ApiError(400, "File is not uploaded")

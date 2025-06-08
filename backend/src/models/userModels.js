@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose, { Schema } from "mongoose";
 
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 // import jwt from "json-web-token";
 
 const userModel = new Schema(
@@ -11,7 +11,7 @@ const userModel = new Schema(
       type: String,
       required: true,
       unique: true,
-      LowerCase: true,
+      lowercase: true,
     },
 
     firstname: {
@@ -27,13 +27,13 @@ const userModel = new Schema(
       type: String,
       required: true,
       unique: true,
-      LowerCase: true,
+      lowercase: true,
     },
 
     password: {
       type: String,
       required: true,
-      kMaxLength: [6, "At least 6 symbols, letters, dots, numbers combination"],
+      minlength: [3 , "Password must be at least 6 characters long"],
     },
 
     //FUTURE
@@ -58,22 +58,23 @@ const userModel = new Schema(
   }
 );
 
-//FUTURE
-/*
-//hashing password
-userModel.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
 
 //comparing password
 userModel.methods.validatePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
-};
+  };
+  
+  //FUTURE
+  /*
+  //hashing password
+  userModel.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+  
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+  });
 
-//token generation
-*/
+  //token generation
+  */
 
 export const User = mongoose.model("User", userModel);

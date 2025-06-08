@@ -1,17 +1,21 @@
 import dotenv from 'dotenv'
-dotenv.config()
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
 
-cloudinary.config({ 
+dotenv.config()
+
+export const cloudinary = cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
+  api_key: process.env.CLOUDINARY_API_SECRET, 
+  api_secret: process.env.CLOUDINARY_API_SECRET_KEY 
 });
 
-// console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
-// console.log("api_key: ", process.env.CLOUDINARY_API_KEY)
-console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET)
+console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
+console.log("api_key: ", process.env.CLOUDINARY_API_SECRET)
+console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET_KEY)
+
+/*
+FOR FUTURE
 
 export const uploadOnCloudinary = async (localFilePath) => {
     try {
@@ -35,3 +39,5 @@ export const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 // console.log(uploadOnCloudinary)
+
+*/
