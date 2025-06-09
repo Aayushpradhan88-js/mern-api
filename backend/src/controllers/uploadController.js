@@ -1,29 +1,47 @@
 // import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { cloudinary } from "../utils/cloudinary.js"
+import { Image } from "../models/uploadModels.js";
 
 export const imageUpload = (req, res) => {
-    
-    cloudinary.uploader.upload(req.file.path, (err, result) => {
-        if(err) {
+
+    cloudinary.uploader.upload(req.file.path, async (req, res, err, result) => {
+        try {
+            const { resourceType, format } = req.file;
+            const image = awaitImage({ resourceType, format })
+            await image.save()
+
+            res.send({
+                success: true,
+                msg: "Image Uploaded Successfully",
+                data: image
+            })
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                msg: "Error"
+            })
+        }
+        
+        if (err) {
             return res
-            .status(500)
-            .json(
-                {
-                    success: false,
-                    msg: "Error"
-                }
-            )
+                .status(500)
+                .json(
+                    {
+                        success: false,
+                        msg: "Error"
+                    }
+                )
         }
 
         res
-        .status(200)
-        .json(
-            {
-                success: true,
-                msg: "Image Uploaded Succeessfully",
-                data: result
-            }
-        )
+            .status(200)
+            .json(
+                {
+                    success: true,
+                    msg: "Image Uploaded Succeessfully",
+                    data: result
+                }
+            )
     })
 }
 
