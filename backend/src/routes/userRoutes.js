@@ -5,17 +5,12 @@ import {
   registerUser,
   loginUser
 } from "../controllers/userController.js";
-import { uploadContent, getAllUploads } from "../controllers/uploadController.js";
-import { upload } from "../middlewares/multerMiddleware.js";
 
 dotenv.config();
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-
-router.post("/upload", upload.single("file"), uploadContent);
-router.get("/all", getAllUploads);
 
 
 //FUTURE

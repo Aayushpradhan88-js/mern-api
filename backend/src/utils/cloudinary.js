@@ -1,13 +1,9 @@
-import dotenv from "dotenv"
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
 
-
-dotenv.config();
-
-console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
-console.log("api_key: ", process.env.CLOUDINARY_API_KEY)
-console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET)
+// console.log("cloudname: ", process.env.CLOUDINARY_CLOUD_NAME)
+// console.log("api_key: ", process.env.CLOUDINARY_API_KEY)
+// console.log("api_secret: ", process.env.CLOUDINARY_API_SECRET)
 
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -15,11 +11,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET, 
 });
 
-export { cloudinary }
+export {cloudinary}
 
 /*
-FOR FUTURE
-
+Future
 export const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null
@@ -29,11 +24,11 @@ export const uploadOnCloudinary = async (localFilePath) => {
             resource_type: "auto"
         })
 
-        
         // file has been uploaded successfull
         //console.log("file is uploaded on cloudinary ", response.url);
         fs.unlinkSync(localFilePath)
         console.log(response.data)
+
         return response;
         
     } catch (error) {
@@ -42,5 +37,4 @@ export const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 // console.log(uploadOnCloudinary)
-
 */

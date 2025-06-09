@@ -1,33 +1,39 @@
+// import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { cloudinary } from "../utils/cloudinary.js"
+
+export const imageUpload = (req, res) => {
+    
+    cloudinary.uploader.upload(req.file.path, (err, result) => {
+        if(err) {
+            return res
+            .status(500)
+            .json(
+                {
+                    success: false,
+                    msg: "Error"
+                }
+            )
+        }
+
+        res
+        .status(200)
+        .json(
+            {
+                success: true,
+                msg: "Image Uploaded Succeessfully",
+                data: result
+            }
+        )
+    })
+}
+
+
+/*
+Future
+
 import { Upload } from "../models/uploadModels.js";
-import { cloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-
-
-export const uploadOnCloudinary = async (fileBuffer, resourceType) => {
-    try {
-        if (!fileBuffer) return null;
-        
-        console.log("Cloudinary object:", cloudinary);
-        console.log("Cloudinary uploader object:", cloudinary.uploader);
-
-
-        const result = await cloudinary.uploder.upload(
-            `data: ${fileBuffer.mimeType};base64.${fileBuffer.buffer.toString('base64')}`,
-            {
-                resource_Type: resourceType,
-                folder: ''
-            }
-        );
-
-        return result;
-    } catch (error) {
-        console.error("Error uploading to Cloudinary:", error);
-        return null;
-
-    }
-};
-
 export const uploadContent = async (req, res) => {
     try {
         const { title, description, contentType, uploadedBy } = req.body;
@@ -119,3 +125,4 @@ export const getAllUploads = async (req, res) => {
 
         )
 }
+        */
