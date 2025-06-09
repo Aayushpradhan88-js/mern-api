@@ -1,5 +1,20 @@
 import mongoose, {Schema} from 'mongoose';
 
+const imageModel = new Schema({
+    resourceType: {
+        type: String,
+        required: true
+    },
+    format: {
+        type: String,
+        required: true
+    }
+})
+
+export const Image = mongoose.model('Image', imageModel)
+
+/*
+FUTURE CODE
 const uploadSchema = new Schema ({
     thumbnail: {
         type: String,
@@ -59,3 +74,4 @@ const uploadSchema = new Schema ({
 {timestamps: true})
 
 export const Upload = mongoose.model('Upload', uploadSchema );
+*/
