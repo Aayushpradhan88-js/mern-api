@@ -19,13 +19,13 @@ const uploadSchema = new Schema ({
     contentType:{
         type:String,
                 required:true,
-        enum: [video, file, image],
+        enum: ['video', 'file', 'image'],
     },
     uploadedBy: {
         type: Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
     },
-    memeType: {
+    mimeType: {
         type: String // e.g., 'image/jpeg', 'video/mp4', 'application/pdf'
     },
 

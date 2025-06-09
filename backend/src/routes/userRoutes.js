@@ -1,40 +1,25 @@
 import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
+
 import {
   registerUser,
   loginUser
 } from "../controllers/userController.js";
+import { uploadContent, getAllUploads } from "../controllers/uploadController.js";
+import { upload } from "../middlewares/multerMiddleware.js";
 
-
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-
+dotenv.config();
 const router = express.Router();
 
-router.post("/register",registerUser);
+router.post("/register", registerUser);
 router.post("/login", loginUser);
+
+router.post("/upload", upload.single("file"), uploadContent);
+router.get("/all", getAllUploads);
+
 
 //FUTURE
 /*
-router.post("/upload", upload.single("coverImage"), (req, res) => {
-  if(!req.file) {
-    throw new ApiError(400, "File is not uploaded")
-  }
-
-  console.log("File uploaded: ", req.file)
-
-  return (
-    res.status(200)
-    .json(
-      {
-        message: "File Uploaded Successfully",
-        Filename: req.Filename,
-        Filepath: req.Filepath
-      }
-    )
-  )
-});
 router.get("/search", voiceSearch);
 // router.get("/ai-response", aiController);
 // router.post("/assistance", assistanceController);
