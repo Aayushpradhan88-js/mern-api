@@ -1,49 +1,83 @@
 // import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { cloudinary } from "../utils/cloudinary.js"
 import { Image } from "../models/uploadModels.js";
+import {promises as fsPromises} from "fs";
+// import { ApiResponse } from "../utils/ApiResponse.js";
+// Import ApiError if you plan to throw errors to be caught by a global error handler
+// import { ApiError } from "../utils/ApiError.js";
 
-export const imageUpload = (req, res) => {
+export const imageUpload = async (req, res) => {
+    // console.log(req.body);
+    // const file = req.files.photo;
 
-    cloudinary.uploader.upload(req.file.path, async (req, res, err, result) => {
-        try {
-            const { resourceType, format } = req.file;
-            const image = awaitImage({ resourceType, format })
-            await image.save()
+    if (!req.files || !req.files.photo || !req.files.photo.tempFilePath) {
+        console.log("No file uploaded or tempFilePath not found");
 
-            res.send({
-                success: true,
-                msg: "Image Uploaded Successfully",
-                data: image
-            })
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                msg: "Error"
-            })
+        return res.status(400).json({
+            success: false,
+            message: "No file uploaded. Please ensure you are sending a file with the field name 'photo'."
+        })
+    }
+
+    const file = req.files.photo;
+    const tempFilePath = file.tempFilePath;
+
+    try {
+        //UPLOAD FILE ON CLOUDINARY
+        const cloudinaryResult = await cloudinary.uploader.upload(tempFilePath, {
+            resource_type: "auto"
+        });
+
+        console.log("FILE IS SUCCESSFULLY UPLOADED ON CLOUDINARY", cloudinaryResult);
+
+        //SAVING UPLOAD DATA TO MONGODB
+        const newImage = new Image({
+            url: cloudinaryResult.secure_url,
+            public_id: cloudinaryResult.public_id,
+            resourceType: cloudinaryResult.resource_type,
+            format: cloudinaryResult.format
+        })
+
+        const savedImage = await newImage.save();
+        console.log("Image metadata saved to MongoDB", savedImage);
+        // SEND SUCCESS RESPONSE
+        return res.status(201).json({
+            success: true,
+            message: "Image uploaded and data saved successfully!",
+            cloudinaryData: {
+                url: cloudinaryResult.secure_url,
+                public_id: cloudinaryResult.public_id,
+                resource_type: cloudinaryResult.resource_type,
+                format: cloudinaryResult.format
+            },
+            mongoData: savedImage
+        });
+
+    } catch (error) {
+        console.error("Error during image upload process:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error during image upload.",
+            error: error.message
+        })
+    }
+    finally {
+        // Clean up the temporary file
+        if (tempFilePath) { // Check if tempFilePath was defined
+            try {
+                await fsPromises.unlink(tempFilePath); // Use fs.promises for async/await
+                console.log("Temporary file deleted:", tempFilePath);
+            } catch (unlinkError) {
+                console.error("Error deleting temporary file:", tempFilePath, unlinkError);
+            }
         }
-        
-        if (err) {
-            return res
-                .status(500)
-                .json(
-                    {
-                        success: false,
-                        msg: "Error"
-                    }
-                )
-        }
+    }
 
-        res
-            .status(200)
-            .json(
-                {
-                    success: true,
-                    msg: "Image Uploaded Succeessfully",
-                    data: result
-                }
-            )
-    })
 }
+
+//hey hey for this time i don't care about frontend and error handling i just want to get the image data, i want that when i get the data it should be stored in the cloudinary and i can see it and i want to see the user data should be stored in mongodb that error handling part complex code which i don't understant i don't want that thing but you make my code very much complex and i can't understant should i shift to chatgpt because you're creating more problems and write unnecessary code and error handling
+
+
 
 
 /*

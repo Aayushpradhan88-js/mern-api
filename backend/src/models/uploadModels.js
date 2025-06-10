@@ -1,15 +1,22 @@
 import mongoose, {Schema} from 'mongoose';
 
 const imageModel = new Schema({
-    resourceType: {
+    url: {
         type: String,
         required: true
     },
+    public_id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    resourceType: {
+        type: String,
+    },
     format: {
         type: String,
-        required: true
     }
-})
+}, { timestamps: true})
 
 export const Image = mongoose.model('Image', imageModel)
 
