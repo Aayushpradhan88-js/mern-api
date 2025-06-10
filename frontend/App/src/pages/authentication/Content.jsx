@@ -49,7 +49,7 @@ export const Content = () => {
                         {/* UPLOAD: FILES, VIDEOS, DOCS, PICS...... */}
                         <div className="absolute top-4 right-4 flex items-center gap-2">
                             <button className="px-4 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-700">
-                                <Link to="Upload">Upload</Link>
+                                Upload
                             </button>
                         </div>
 
