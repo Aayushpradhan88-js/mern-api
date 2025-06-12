@@ -52,10 +52,11 @@ export const uploadFileContent = async (req, res) => {
             description: description || '',
             contentType,
             thumbnail: thumbnailUrl,
+            format: cloudinaryResult.format,
+            version: cloudinaryResult.version,
             url: cloudinaryResult.secure_url,
             public_id: cloudinaryResult.public_id,
             resourceType: cloudinaryResult.resource_type,
-            format: cloudinaryResult.format
         })
 
         const savedUpload = await newUpload.save();
