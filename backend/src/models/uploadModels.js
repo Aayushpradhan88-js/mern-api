@@ -1,66 +1,61 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-const imageModel = new Schema({
-    url: {
-        type: String,
-        required: true
-    },
-    public_id: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    resourceType: {
-        type: String,
-    },
-    format: {
-        type: String,
-    }
-}, { timestamps: true})
-
-export const Image = mongoose.model('Image', imageModel)
-
-/*
-FUTURE CODE
-const uploadSchema = new Schema ({
+const UploadModel = new Schema({
     thumbnail: {
         type: String,
         required: true
     },
     title: {
-        type:String,
+        type: String,
         required: [true, 'A Title is required'],
         trim: true
 
     },
     description: {
-                type: String,
-                trim: true
+        type: String,
+        trim: true
 
     },
-    contentType:{
-        type:String,
-                required:true,
+    contentType: {
+        type: String,
+        required: true,
         enum: ['video', 'file', 'image'],
     },
+    
     uploadedBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    mimeType: {
-        type: String // e.g., 'image/jpeg', 'video/mp4', 'application/pdf'
-    },
-
     //---- ViewsCounter (applies to all content) -----
     views: {
         type: Number,
-        default: 0 
+        default: 0
     },
+
     isPublished: {
-        type:Boolean,
+        type: Boolean,
         default: true
     },
 
+    url: {
+        type: String,
+        required: true
+    },
+
+    public_id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
+    resourceType: {
+        type: String,
+    },
+
+    format: {
+        type: String,
+    },
+    /*
     //  --- Type-Specific Metadata ---
     meta: {
         //For videos
@@ -74,11 +69,10 @@ const uploadSchema = new Schema ({
         },
 
         //For images & videos only
-         width: { type: Number },
+        width: { type: Number },
         height: { type: Number },
     },
-}, 
-{timestamps: true})
+    */
+}, { timestamps: true })
 
-export const Upload = mongoose.model('Upload', uploadSchema );
-*/
+export const Upload = mongoose.model('Upload', UploadModel);

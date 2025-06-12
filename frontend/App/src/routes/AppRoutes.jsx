@@ -17,7 +17,8 @@ export const AppRoutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/content" element={<Content />} />
-        <Route path= "/upload" element={<ImageUploader/>}/>  
+        <Route path="/upload" element={<ImageUploader />} />
+
         <Route path="/assistance-ai" element={<Chat />} />
       </Routes>
     </BrowserRouter>

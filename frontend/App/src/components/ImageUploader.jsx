@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const ImageUploader = ({onUploadSuccess}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);

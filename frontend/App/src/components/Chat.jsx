@@ -5,7 +5,7 @@ export const Chat = () => {
   const [input, setInput] = useState('') //Stores the current text being typed by the user.
 
   useEffect(() => {
-    ws.current = new WebSocket('ws://localhost:3001') // WebSocket server's port
+  // WebSocket server's port
 
     ws.current.onmessage = (event) => {
       const { type, data } = JSON.parse(event.data)
@@ -27,7 +27,7 @@ export const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault
-    const response = await fetch('http://localhost:5000/api/v2/user/assistance', {
+    const response = await fetch('http://localhost:5000/api/assistance', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

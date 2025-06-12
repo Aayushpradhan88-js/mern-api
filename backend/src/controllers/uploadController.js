@@ -1,14 +1,15 @@
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { cloudinary } from "../utils/cloudinary.js"
-import { Image } from "../models/uploadModels.js";
-import {promises as fsPromises} from "fs";
+import { Upload } from "../models/uploadModels.js";
+import { promises as fsPromises } from "fs";
+import { ApiError } from "../utils/ApiError.js";
 // import { ApiResponse } from "../utils/ApiResponse.js";
-// Import ApiError if you plan to throw errors to be caught by a global error handler
-// import { ApiError } from "../utils/ApiError.js";
 
-export const imageUpload = async (req, res) => {
-    // console.log(req.body);
-    // const file = req.files.photo;
+export const uploadFileContent = async (req, res) => {
+    const { title, description, contentType } = req.body;
+
+    if (!title || !description) {
+        throw new ApiError(400, "Title and description is required");
+    }
 
     if (!req.files || !req.files.photo || !req.files.photo.tempFilePath) {
         console.log("No file uploaded or tempFilePath not found");
@@ -23,41 +24,61 @@ export const imageUpload = async (req, res) => {
     const tempFilePath = file.tempFilePath;
 
     try {
+
+        const contentTypeToResourceTypeMap = {
+            'image': 'image',
+            'video': 'video',
+            'file': 'raw' //For documents, pdf, txt, files 
+        };
+
+        const cloudinaryResourceType = contentTypeToResourceTypeMap[contentType?.toLowerCase()];
+
+        if (!cloudinaryResourceType) throw new ApiError(400, 'In-Valid Content-Type');
+
         //UPLOAD FILE ON CLOUDINARY
         const cloudinaryResult = await cloudinary.uploader.upload(tempFilePath, {
-            resource_type: "auto"
+            resource_type: cloudinaryResourceType,
+            // format: format
         });
 
-        console.log("FILE IS SUCCESSFULLY UPLOADED ON CLOUDINARY", cloudinaryResult);
+        console.log(`FILE TYPE ${contentType} IS SUCCESSFULLY UPLOADED ON CLOUDINARY`, cloudinaryResult);
+
+        //TODO: UNDERSTAND THE CODE LINE
+        const thumbnailUrl = (contentType === 'image' || contentType === 'video') ? cloudinaryResult.secure_url.replace(/\.(mp4|mov|avi)$/i, '.jpg') : cloudinaryResult.secure_url;
 
         //SAVING UPLOAD DATA TO MONGODB
-        const newImage = new Image({
+        const newUpload = new Upload({
+            title,
+            description: description || '',
+            contentType,
+            thumbnail: thumbnailUrl,
             url: cloudinaryResult.secure_url,
             public_id: cloudinaryResult.public_id,
             resourceType: cloudinaryResult.resource_type,
             format: cloudinaryResult.format
         })
 
-        const savedImage = await newImage.save();
-        console.log("Image metadata saved to MongoDB", savedImage);
-        // SEND SUCCESS RESPONSE
+        const savedUpload = await newUpload.save();
+        console.log(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} metadata saved to MongoDB:`, savedUpload);
+  
+ 
         return res.status(201).json({
             success: true,
-            message: "Image uploaded and data saved successfully!",
+            message: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} uploaded Successfully!`,
             cloudinaryData: {
                 url: cloudinaryResult.secure_url,
                 public_id: cloudinaryResult.public_id,
                 resource_type: cloudinaryResult.resource_type,
                 format: cloudinaryResult.format
             },
-            mongoData: savedImage
+            mongoData: savedUpload
         });
 
     } catch (error) {
-        console.error("Error during image upload process:", error);
+        console.error(`Error during ${contentType || 'file'} upload process:`, error);
         return res.status(500).json({
             success: false,
-            message: "Server error during image upload.",
+            message: `Server error during ${contentType || 'file'} upload.`,
             error: error.message
         })
     }
@@ -122,7 +143,7 @@ export const uploadContent = async (req, res) => {
         let metaData = {};
         if (contentType === 'video') {
             metaData.duration = cloudinaryUploadResult.duration;
-            metaData.thumbnailUrl = cloudinaryUploadResult.thumbnailUrl;
+            metaData.thumbnailUrl = cloudinaryUploadResult.thumbnailUrl;k
         } else if (contentType === 'image') {
             metaData.width = cloudinaryUploadResult.width;
             metaData.height = cloudinaryUploadResult.height;
