@@ -1,15 +1,42 @@
-import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { ImageUploader } from "../../components/ImageUploader";
+import React, { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const Content = () => {
-    const [images, setImages] = useState([]);
-    const [showUploader, setShowUploader] = useState(false);
+    const [contentItems, setContentItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleImageUploadSuccess = (newImage) => {
-        setImages((prevImages) => [newImage, ...prevImages]);
-    };
 
+    useEffect(() => {
+        const fetchContent = async () => {
+            setIsLoading(true);
+
+            try {
+                const response = await fetch('http://localhost:4000/upload/all-content');
+
+                if (!response.ok) {
+                    //Handles HTTP errors 400 / 500
+                    const errorResult = await response.json();
+                    throw new Error(errorResult.message || ` HTTP Error status: {response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setContentItems(result.data);
+                } else {
+                    toast.error(result.message || "Failed to fetch content.");
+                }
+            } catch (error) {
+                toast.error(`Error failed to fetched content ${error.message}`);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchContent();
+    }, [])
     return (
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">
@@ -42,45 +69,53 @@ export const Content = () => {
 
                         {/* IMAGE SECTION */}
                         <div className="flex gap-2">
-                                <button
-                                    onClick={() => setShowUploader(!showUploader)}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                                >
-                                   {showUploader ? "Close" : "Upload"}
-                                </button>
+                            <button
+                                onClick={() => navigate('/upload')}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                            >
+                                + Upload
+                            </button>
                         </div>
+                    </div>
 
+                    {/* Content gallery */}
+                    <div>
+                        <h2 className="text-xl font-semibold mb-4">Your Contents</h2>
                         {
-                            showUploader && (
-                                <div className="w-full md:w-auto">
-                                    <ImageUploader onUploadSuccess={handleImageUploadSuccess} />
-                                </div>
+                            isLoading ? (
+                                <p className="text-xl font-semibold my-6">Loading Content...</p>
+                            ) : contentItems.length === 0 ? (
+                                <p className="text gray-500">No Content Uploaded Yet</p>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                    {contentItems.map((item) => (
+                                        <div key={item.public_id || item._id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
 
+                                            {/* Image */}
+                                            {item.contentType === 'image' && (
+                                                <img src={item.thumbnail || item.url} alt={item.title || 'uploaded image'} className="w-full h-48 object-cover" />)}
+
+                                            {/* Video */}
+                                            {item.contentType === 'video' && (
+                                                <video controls src={item.url} poster={item.thumbnail} className="w-full h-48 object-cover">Your browser does not support the video tag.</video>
+                                            )}
+
+                                            {/* File */}
+                                            {item.contentType === 'file' && (
+                                                <div className="w-full h-48 flex items-center justify-center bg-gray-700 p-3"><span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span></div>
+                                            )}
+                                            <div className="p-3">
+                                                <h3 className="text-md font-semibold truncate text-gray-100" title={item.title}>{item.title}</h3>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             )
                         }
-                        <Outlet />
+
                     </div>
 
-                    {/* Image gallery */}
-                    <div>
-                        <h2 className="text-xl font-semibold mb-4">Your Images</h2>
-                        {images.length === 0 ? (
-                            <p className="text-gray-500">No images uploaded</p>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {images.map((image) => (
-                                    <div key={image.public_id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                                        <img src={image.url} alt={image.public_id || 'uploaded image'} className="w-full h-48 object-cover" />
-                                        <div className="p-2">
-                                            <p className="text-xs text-gray-400">Format: {image.format}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* IMAGE SECTION */}
+                    {/* ContentSECTION */}
 
                     {/* CHAT SECTION */}
                     <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
@@ -89,7 +124,7 @@ export const Content = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v7a2 2 0 01-2 2h-6l-4 4v-4H7a2 2 0 01-2-2v-1" />
                             </svg>
-                            
+
                         </button>
                     </div>
                     {/* CHAT SECTION */}

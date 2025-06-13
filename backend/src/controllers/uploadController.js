@@ -2,7 +2,8 @@ import { cloudinary } from "../utils/cloudinary.js"
 import { Upload } from "../models/uploadModels.js";
 import { promises as fsPromises } from "fs";
 import { ApiError } from "../utils/ApiError.js";
-// import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+
 
 export const uploadFileContent = async (req, res) => {
     const { title, description, contentType } = req.body;
@@ -77,7 +78,9 @@ export const uploadFileContent = async (req, res) => {
 
     } catch (error) {
         console.error(`Error during ${contentType || 'file'} upload process:`, error);
-        return res.status(500).json({
+        return res
+        .status(500)
+        .json({
             success: false,
             message: `Server error during ${contentType || 'file'} upload.`,
             error: error.message
@@ -97,106 +100,30 @@ export const uploadFileContent = async (req, res) => {
 
 }
 
-//hey hey for this time i don't care about frontend and error handling i just want to get the image data, i want that when i get the data it should be stored in the cloudinary and i can see it and i want to see the user data should be stored in mongodb that error handling part complex code which i don't understant i don't want that thing but you make my code very much complex and i can't understant should i shift to chatgpt because you're creating more problems and write unnecessary code and error handling
-
-
-
-
-/*
-Future
-
-import { Upload } from "../models/uploadModels.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { ApiError } from "../utils/ApiError.js";
-export const uploadContent = async (req, res) => {
-    try {
-        const { title, description, contentType, uploadedBy } = req.body;
-        const file = req.file;
-
-        if (!file) {
-            console.log("File is not uploaded")
-            return new ApiError(400, "File is not uploaded")
-        }
-
-        if (!title || !contentType) {
-            return new ApiError(400, 'Title & ContentType is required');
-        }
-
-        //Determining Content based on user preferences
-        let cloudinaryResourceType;
-        if (contentType === 'video') {
-            cloudinaryResourceType = 'video';
-        } else if (contentType === 'image') {
-            cloudinaryResourceType = 'image';
-        } else if (contentType === 'file') {
-            cloudinaryResourceType = 'raw' //For General Files
-        } else {
-            return new ApiError(400, 'Invalid content-type');
-        };
-
-        const cloudinaryUploadResult = await uploadOnCloudinary(file, cloudinaryResourceType);
-
-        if (!cloudinaryUploadResult || !cloudinaryUploadResult.secure_url) {
-            return new ApiError(500, 'Failed to upload file to cloudinary')
-        }
-
-        //META DATA BASED ON CONTENT TYPE
-        let metaData = {};
-        if (contentType === 'video') {
-            metaData.duration = cloudinaryUploadResult.duration;
-            metaData.thumbnailUrl = cloudinaryUploadResult.thumbnailUrl;k
-        } else if (contentType === 'image') {
-            metaData.width = cloudinaryUploadResult.width;
-            metaData.height = cloudinaryUploadResult.height;
-            metaData.thumbnailUrl = cloudinaryUploadResult.secure_url;
-        }
-
-        //Saving Upload Data to MONGODB
-        const newUpload = new Upload(
-            {
-                thumbnail: cloudinaryUploadResult.secure_url,
-                title,
-                description,
-                contentType,
-                uploadedBy: uploadedBy || null,
-                memeType: file.mimeType,
-                meta: metaData,
-            }
-        );
-
-        await newUpload.save();
-
-        return res
-            .status(201)
-            .json(
-                {
-                    success: true,
-                    message: 'Content uploaded successfully',
-                    upload: newUpload,
-                    cloudinaryResult: {
-                        secure_url: cloudinaryUploadResult.secure_url,
-                        public_id: cloudinaryUploadResult.public_id,
-                        resource_type: cloudinaryUploadResult.resource_type
-                    }
-                }
-            )
-    } catch (error) {
-        console.error('Error during content upload:', error);
-        res.status(500).json({ success: false, message: 'Server error during upload.' });
-    }
-}
-
+//GET ALL UPLOADS
 export const getAllUploads = async (req, res) => {
-    const uploads = await Upload.find().populate('uploadedBy', 'username email')
-    return res
+    try {
+        const uploads = await Upload.find().sort({createdAt: -1})
+    
+        if(!uploads){
+            throw new ApiError(400, "No Uploads Found");
+        };
+    
+        return res
         .status(200)
         .json(
-            new ApiResponse(
-                200,
-                { uploads },
-                "Uploads fetched successfully"
-            )
-
+            new ApiResponse(200, uploads, "uploads fetched successfully")
+        );
+    } catch (error) {
+        console.error("Error fetching all uploads: ", error);
+        return res
+        .status(500)
+        .json(
+            {
+                success: false,
+                message: "Server error while fetching uploads data",
+                error: error.message
+            }
         )
+    }
 }
-        */

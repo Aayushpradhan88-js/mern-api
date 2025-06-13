@@ -10,7 +10,6 @@ export const ContentUploader = ({ onUploadSuccess }) => {
   const [description, setDescription] = useState("");
   const [contentType, setContentType] = useState("image");
 
-
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };

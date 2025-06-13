@@ -5,6 +5,7 @@ import { Register } from '../pages/authentication/Register'
 import { Login } from '../pages/authentication/Login'
 import { Content } from '../pages/authentication/Content'
 import { Upload } from '../components/Upload'
+
 import { Chat } from '../components/Chat'
 
 export const AppRoutes = () => {
