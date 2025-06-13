@@ -6,8 +6,6 @@ import { Login } from '../pages/authentication/Login'
 import { Content } from '../pages/authentication/Content'
 import { Upload } from '../components/Upload'
 
-import { Chat } from '../components/Chat'
-
 export const AppRoutes = () => {
   return (
 
@@ -18,8 +16,6 @@ export const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/content" element={<Content />} />
         <Route path="/upload" element={<Upload />} />
-
-        <Route path="/assistance-ai" element={<Chat />} />
       </Routes>
     </BrowserRouter>
 

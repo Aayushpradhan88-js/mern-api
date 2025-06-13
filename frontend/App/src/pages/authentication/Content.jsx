@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Chat from "../../components/Chat";
 
 export const Content = () => {
     const [contentItems, setContentItems] = useState([]);
@@ -29,7 +30,8 @@ export const Content = () => {
                     toast.error(result.message || "Failed to fetch content.");
                 }
             } catch (error) {
-                toast.error(`Error failed to fetched content ${error.message}`);
+                console.log(error.message);
+                // toast.error(`Error failed to fetched content ${error.message}`);
             } finally {
                 setIsLoading(false);
             }
@@ -64,6 +66,7 @@ export const Content = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18.5a7.5 7.5 0 006.15-3.85z" />
                                 </svg>
+                                
                             </button>
                         </div>
 
@@ -118,7 +121,7 @@ export const Content = () => {
                     {/* ContentSECTION */}
 
                     {/* CHAT SECTION */}
-                    <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
+                    {/* <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2">
                         <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2">
                             <h1 className="cursor-pointer">Assistance</h1>
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,7 +129,10 @@ export const Content = () => {
                             </svg>
 
                         </button>
-                    </div>
+                    </div> */}
+
+                    <Chat />
+
                     {/* CHAT SECTION */}
                 </main>
             </div>
