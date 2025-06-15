@@ -28,8 +28,8 @@ const Chat = () => {
       {/* Chat window */}
       {
         isOpen &&  (
-          <div className="fixed bottom-5 right-5 md:bottom-8 md:right-8 w-[calc(100%-2.5rem)] max-w-md h-[70vh] max-h-[600px] bg-white rounded-xl shadow-2xl flex flex-col transition-all duration-300 ease-in-out">
-            <ChatWindow/>
+          <div className="fixed bottom-5 right-5 md:bottom-8 md:right-8 w-[calc(100%-2.5rem)] max-w-md h-[70vh] max-h-[300px] bg-white rounded-xl shadow-2xl flex flex-col transition-all duration-300 ease-in-out">
+            <ChatWindow closeChat={toogleChat}/>
           </div>
         )
       } 
