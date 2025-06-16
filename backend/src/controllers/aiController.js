@@ -1,13 +1,13 @@
 import { aiResponse } from "../services/aiServices.js"
 
-export const aiController = async (req, res) => {
-  const code = req.body.code
+export const personalAssistantController = async (req, res) => {
+  const userMessage = req.body.message
 
-  if (!code) {
-    return res.status(400).send("code is required")
+  if (!userMessage) {
+    return res.status(400).send("Prompt is required")
   }
 
-  const response = await aiResponse(code)
+  const geminiResponse = await aiResponse(code)
 
-  res.send(response)
+  res.send(geminiResponse); 
 }
