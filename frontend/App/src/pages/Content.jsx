@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Chat from "../../components/Chat";
+import Chat from "../components/chat/Chat";
 
 export const Content = () => {
     const [contentItems, setContentItems] = useState([]);
@@ -14,7 +14,12 @@ export const Content = () => {
             setIsLoading(true);
 
             try {
-                const response = await fetch('http://localhost:4000/upload/all-content');
+                const response = await fetch('http://localhost:4000/upload/all-uploads',{
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                });
 
                 if (!response.ok) {
                     //Handles HTTP errors 400 / 500
@@ -96,16 +101,29 @@ export const Content = () => {
 
                                             {/* Image */}
                                             {item.contentType === 'image' && (
-                                                <img src={item.thumbnail || item.url} alt={item.title || 'uploaded image'} className="w-full h-48 object-cover" />)}
+                                                <img src={item.thumbnail || item.url}
+                                                 alt={item.title || 'uploaded image'} 
+                                                 className="w-full h-48 object-cover" 
+                                                 />
+                                                 )}
 
                                             {/* Video */}
                                             {item.contentType === 'video' && (
-                                                <video controls src={item.url} poster={item.thumbnail} className="w-full h-48 object-cover">Your browser does not support the video tag.</video>
+                                                <video 
+                                                controls 
+                                                src={item.url} 
+                                                poster={item.thumbnail} 
+                                                className="w-full h-48 object-cover"
+                                                >
+                                                    Your browser does not support the video tag.
+                                                    </video>
                                             )}
 
                                             {/* File */}
                                             {item.contentType === 'file' && (
-                                                <div className="w-full h-48 flex items-center justify-center bg-gray-700 p-3"><span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span></div>
+                                                <div 
+                                                className="w-full h-48 flex items-center justify-center bg-gray-700 p-3">
+                                                    <span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span></div>
                                             )}
                                             <div className="p-3">
                                                 <h3 className="text-md font-semibold truncate text-gray-100" title={item.title}>{item.title}</h3>

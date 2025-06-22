@@ -4,11 +4,12 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { Home } from '../components/Home'
 import { Register } from '../pages/authentication/Register'
 import { Login } from '../pages/authentication/Login'
-import { Content } from '../pages/authentication/Content'
-import { Upload } from '../components/Upload'
+import { Content } from '../pages/Content'
+import { Upload } from '../components/upload/Upload'
+import { ChannelSubscriptionUI } from '../components/channel/ChannelSubscriptionUISubscriptionUI'
 
 export const AppRoutes = () => {
-  return (  
+  return (
 
     <BrowserRouter>
       <Routes>
@@ -17,6 +18,8 @@ export const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/content" element={<Content />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/watch" element={<ChannelSubscriptionUI />} />
+
       </Routes>
     </BrowserRouter>
 

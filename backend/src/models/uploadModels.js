@@ -32,6 +32,10 @@ const UploadModel = new Schema({
         default: 0
     },
 
+    comment: {
+        type: String,
+    },
+
     isPublished: {
         type: Boolean,
         default: true

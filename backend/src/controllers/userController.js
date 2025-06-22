@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-import cors from "cors";
 import { User } from "../models/userModels.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -8,12 +7,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 //TEMPORARY IMPORT PACKAGES
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-// console.log(process.env.JWT_SECRET_KEY)
-
-//FOR FUTURE
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
-
 
 //Registering User
 export const registerUser = async (req, res) => {
@@ -32,7 +25,7 @@ export const registerUser = async (req, res) => {
   if (existedUser) {
     throw new ApiError(401, "Already taken try another");
   };
-  console.log(req.files)
+  // console.log(req.files)
 
   const userHash = await bcrypt.hash(password, 10);
 
@@ -126,39 +119,6 @@ message: "Successfully logout",
 });
 };
 
-//getting all user
-export const getUsers = async (req, res) => {
-try {
-const userDetails = await User.find();
-return res.status(201).json({
-message: "All User Data is successfully fetched",
-users: userDetails,
-});
-} catch (error) {
-return res.status(501).json({ message: "user is not get " });
-}
-};
-
-//getting user with id
-export const getUser = async (req, res) => {
-try {
-const user = await User.findById(req.params.id);
-if (!user) {
-return res.status(401).json("User is does not existed");
-}
-
-//TODO: Max No3 time user can valid it's dataa
-
-return res.status(201).json({
-message: `Welcome ${user.username} again`,
-data: user,
-});
-} catch (error) {
-return res
-.status(401)
-.json({ message: "Please try again and fill al the fields with id" });
-}
-};
 
 //update user
 export const updateUser = async (req, res) => {
@@ -186,21 +146,5 @@ console.log("files", req.files);
 req.json({});
 };
 
-//delete user
-export const deleteUser = async (req, res) => {
-try {
-const deleteUser = await User.findByIdAndDelete(req.params.id);
-
-if (!deleteUser) {
-return res.status(501).json("Please Try again");
-}
-
-return res.status(201).json({
-message: `You're account is deleted ${deleteUser?.username}`,
-data: deleteUser,
-});
-} catch (error) {
-return res.status(501).json({ message: "cannot delete user" });
-}
 };
 */

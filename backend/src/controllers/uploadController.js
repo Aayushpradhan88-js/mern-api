@@ -61,7 +61,7 @@ export const uploadFileContent = async (req, res) => {
         })
 
         const savedUpload = await newUpload.save();
-        console.log(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} metadata saved to MongoDB:`, savedUpload);
+        // console.log(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} metadata saved to MongoDB:`, savedUpload);
   
  
         return res.status(201).json({
@@ -77,7 +77,7 @@ export const uploadFileContent = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(`Error during ${contentType || 'file'} upload process:`, error);
+        // console.error(`Error during ${contentType || 'file'} upload process:`, error);
         return res
         .status(500)
         .json({
@@ -91,7 +91,7 @@ export const uploadFileContent = async (req, res) => {
         if (tempFilePath) { // Check if tempFilePath was defined
             try {
                 await fsPromises.unlink(tempFilePath); // Use fs.promises for async/await
-                console.log("Temporary file deleted:", tempFilePath);
+                // console.log("Temporary file deleted:", tempFilePath);
             } catch (unlinkError) {
                 console.error("Error deleting temporary file:", tempFilePath, unlinkError);
             }
