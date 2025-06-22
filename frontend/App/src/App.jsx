@@ -1,22 +1,13 @@
-// import UI from './components/UI'
+import React from 'react'
 import { AppRoutes } from './routes/AppRoutes'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toast } from './components/toast/toast'
 
 function App() {
   return (
     <>
       <AppRoutes />
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        draggable
-        theme="light" />
+      <Toast />
     </>
   )
 }

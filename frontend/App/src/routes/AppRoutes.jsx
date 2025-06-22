@@ -1,3 +1,4 @@
+import React from 'react'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 
 import { Home } from '../components/Home'
@@ -7,7 +8,7 @@ import { Content } from '../pages/authentication/Content'
 import { Upload } from '../components/Upload'
 
 export const AppRoutes = () => {
-  return (
+  return (  
 
     <BrowserRouter>
       <Routes>
