@@ -129,5 +129,6 @@ export const getAllUploads = async (req, res) => {
 }
 
 export const contentId = async(req, res) => {
-    const 
+    const {id} = req.params;
+    
 }

@@ -16,7 +16,7 @@ export const Content = () => {
             setIsLoading(true);
 
             try {
-                const response = await fetch('http://localhost:4000/upload/all-uploads',{
+                const response = await fetch('http://localhost:4000/upload/all-uploads', {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json"
@@ -44,15 +44,17 @@ export const Content = () => {
             }
 
             //-------------------- Navigating Content /video, /image, /file--------------------
-            const navigateToContent = (item) => {
-                const {contentType, _id} = item;
-                const path = contentType === 'video' ? '/watch' : `/${contentType}`
-                navigate(`/${path}?id=${_id}`);
-            }
         }
 
         fetchContent();
-    }, [])
+    }, [navigate])
+
+    const navigateToContent = (item) => {
+        const { contentType, _id } = item;
+        const path = contentType === 'video' ? '/watch' : `/${contentType}`
+        navigate(`/${path}?id=${_id}`);
+    }
+    
     return (
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">
@@ -75,11 +77,11 @@ export const Content = () => {
                     {/*-----Top bar with search and upload-----*/}
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                         <div className="flex items-center w-full md:w-3/4 bg-gray-800 rounded px-3 py-1">
-                        {/*-----Search Box-----*/}
-                            <input 
-                            type="text" 
-                            placeholder="Search" 
-                            className="bg-transparent focus:outline-none w-full" 
+                            {/*-----Search Box-----*/}
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                className="bg-transparent focus:outline-none w-full"
                             />
                             <button className="mx-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
@@ -111,36 +113,36 @@ export const Content = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                     {contentItems.map((item) => (
                                         <div
-                                         key={item.public_id || item._id} 
-                                         className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
-                                         onClick= {() => navigateToContent(item)}
-                                         >
+                                            key={item.public_id || item._id}
+                                            className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
+                                            onClick={() => navigateToContent(item)}
+                                        >
 
                                             {/* Image */}
                                             {item.contentType === 'image' && (
                                                 <img src={item.thumbnail || item.url}
-                                                 alt={item.title || 'uploaded image'} 
-                                                 className="w-full h-48 object-cover" 
-                                                 />
-                                                 )}
+                                                    alt={item.title || 'uploaded image'}
+                                                    className="w-full h-48 object-cover"
+                                                />
+                                            )}
 
                                             {/* Video */}
                                             {item.contentType === 'video' && (
-                                                <video 
-                                                controls 
-                                                src={item.url} 
-                                                poster={item.thumbnail} 
-                                                className="w-full h-48 object-cover"
-                                                
+                                                <video
+                                                    controls
+                                                    src={item.url}
+                                                    poster={item.thumbnail}
+                                                    className="w-full h-48 object-cover"
+
                                                 >
-                                                <Link to="/watch"></Link>
-                                                    </video>
+                                                    <Link to="/watch"></Link>
+                                                </video>
                                             )}
 
                                             {/* File */}
                                             {item.contentType === 'file' && (
-                                                <div 
-                                                className="w-full h-48 flex items-center justify-center bg-gray-700 p-3">
+                                                <div
+                                                    className="w-full h-48 flex items-center justify-center bg-gray-700 p-3">
                                                     <span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span></div>
                                             )}
                                             <div className="p-3">
