@@ -3,8 +3,9 @@ dotenv.config();
 import cors from "cors";
 import express from "express";
 import fileUpload from "express-fileupload";
-import { router as userRoutes } from "./routes/userRoutes.js";
-import {router as uploadRoutes} from "./routes/uploadRoutes.js";
+import { router as userRoute } from "./routes/userRoutes.js";
+import {router as uploadRoute} from "./routes/uploadRoutes.js";
+import { router as assistantRoute } from "./routes/personalAssistantRoutes.js";
 
 const app = express();
 
@@ -18,8 +19,8 @@ app.use(fileUpload({
     useTempFiles: true
 }));
 
-app.use("/api", userRoutes);
-app.use("/upload", uploadRoutes);
+app.use("/api", userRoute, assistantRoute);
+app.use("/upload", uploadRoute);
 
 app.get("/", (req, res) => {
     res.send("Welcome to Backend")
