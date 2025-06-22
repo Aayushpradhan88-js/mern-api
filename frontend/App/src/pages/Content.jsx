@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
+
 import Chat from "../components/chat/Chat";
 
 export const Content = () => {
@@ -22,7 +24,7 @@ export const Content = () => {
                 });
 
                 if (!response.ok) {
-                    //Handles HTTP errors 400 / 500
+                    //-----Handles HTTP errors 400 / 500-----
                     const errorResult = await response.json();
                     throw new Error(errorResult.message || ` HTTP Error status: {response.status}`);
                 }
@@ -40,6 +42,13 @@ export const Content = () => {
             } finally {
                 setIsLoading(false);
             }
+
+            //-------------------- Navigating Content /video, /image, /file--------------------
+            const navigateToContent = (item) => {
+                const {contentType, _id} = item;
+                const path = contentType === 'video' ? '/watch' : `/${contentType}`
+                navigate(`/${path}?id=${_id}`);
+            }
         }
 
         fetchContent();
@@ -48,7 +57,7 @@ export const Content = () => {
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">
 
-                {/* Sidebar */}
+                {/*----------Sidebar---------- */}
                 <aside className="w-full md:w-1/5 bg-black border-r border-gray-800 p-4">
                     <div className="text-xl font-bold mb-8">LOGO</div>
                     <nav className="space-y-4">
@@ -61,17 +70,21 @@ export const Content = () => {
                     </nav>
                 </aside>
 
-                {/* Main content */}
+                {/*----------Main content----------*/}
                 <main className="flex-1 p-4">
-                    {/* Top bar with search and upload */}
+                    {/*-----Top bar with search and upload-----*/}
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                         <div className="flex items-center w-full md:w-3/4 bg-gray-800 rounded px-3 py-1">
-                            <input type="text" placeholder="Search" className="bg-transparent focus:outline-none w-full" />
+                        {/*-----Search Box-----*/}
+                            <input 
+                            type="text" 
+                            placeholder="Search" 
+                            className="bg-transparent focus:outline-none w-full" 
+                            />
                             <button className="mx-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18.5a7.5 7.5 0 006.15-3.85z" />
                                 </svg>
-                                
                             </button>
                         </div>
 
@@ -97,7 +110,11 @@ export const Content = () => {
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                     {contentItems.map((item) => (
-                                        <div key={item.public_id || item._id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                                        <div
+                                         key={item.public_id || item._id} 
+                                         className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
+                                         onClick= {() => navigateToContent(item)}
+                                         >
 
                                             {/* Image */}
                                             {item.contentType === 'image' && (
@@ -114,8 +131,9 @@ export const Content = () => {
                                                 src={item.url} 
                                                 poster={item.thumbnail} 
                                                 className="w-full h-48 object-cover"
+                                                
                                                 >
-                                                    Your browser does not support the video tag.
+                                                <Link to="/watch"></Link>
                                                     </video>
                                             )}
 

@@ -6,7 +6,7 @@ import { Register } from '../pages/authentication/Register'
 import { Login } from '../pages/authentication/Login'
 import { Content } from '../pages/Content'
 import { Upload } from '../components/upload/Upload'
-import { ChannelSubscriptionUI } from '../components/channel/ChannelSubscriptionUISubscriptionUI'
+import { ChannelSubscriptionUI } from '../components/channel/ChannelSubscriptionUI'
 
 export const AppRoutes = () => {
   return (
@@ -19,7 +19,6 @@ export const AppRoutes = () => {
         <Route path="/content" element={<Content />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/watch" element={<ChannelSubscriptionUI />} />
-
       </Routes>
     </BrowserRouter>
 

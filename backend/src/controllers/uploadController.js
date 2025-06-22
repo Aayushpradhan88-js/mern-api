@@ -127,3 +127,7 @@ export const getAllUploads = async (req, res) => {
         )
     }
 }
+
+export const contentId = async(req, res) => {
+    const 
+}
