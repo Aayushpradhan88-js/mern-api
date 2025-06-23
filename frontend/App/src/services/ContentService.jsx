@@ -2,7 +2,7 @@ import { Toast } from '../components/toast/Toast';
 
 export const FetchContentDetails = async (contentId) => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_SERVER_CONTENT}/upload/single-upload/${contentId}`, {
+    const response = await fetch(`http://localhost:4000/upload/single-upload/${contentId}`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json"

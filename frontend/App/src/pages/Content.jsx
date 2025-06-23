@@ -15,7 +15,7 @@ export const Content = () => {
 
             try {
                 //--------------------FETCHING DATA FROM BACKEND--------------------//
-                const response = await fetch(`${import.meta.env.VITE_SERVER_CONTENT}/upload/all-uploads`, {
+                const response = await fetch(`http://localhost:4000/upload/all-uploads`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json"
@@ -53,15 +53,6 @@ export const Content = () => {
 
         fetchContent();
     }, [navigate])
-
-    //-------------------- Navigating Content /video, /image, /file--------------------//
-    const navigateToContent = (item) => {
-        const { contentType, _id } = item;
-        const path = contentType 
-        // === 'video' ? '/watch' : `/${contentType}`
-        navigate(`${path}?id=${_id}`);
-    }
-
     return (
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">
@@ -119,10 +110,10 @@ export const Content = () => {
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                     {contentItems.map((item) => (
-                                        <div
+                                        <Link
                                             key={item.public_id || item._id}
-                                            className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
-                                            onClick={() => navigateToContent(item)}
+                                            to={item.contentType === 'video' ? `/watch?id=${item._id}` : `/${item.contentType}?id=${item._id}`}
+                                            className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer block"
                                         >
 
                                             {/* Image */}
@@ -141,21 +132,22 @@ export const Content = () => {
                                                     poster={item.thumbnail}
                                                     className="w-full h-48 object-cover"
 
-                                                >
-                                                    <Link to="/watch"></Link>
-                                                </video>
+                                                />
+
                                             )}
 
                                             {/* File */}
                                             {item.contentType === 'file' && (
                                                 <div
                                                     className="w-full h-48 flex items-center justify-center bg-gray-700 p-3">
-                                                    <span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span></div>
+                                                    <span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span>
+                                                    </div>
                                             )}
+
                                             <div className="p-3">
                                                 <h3 className="text-md font-semibold truncate text-gray-100" title={item.title}>{item.title}</h3>
                                             </div>
-                                        </div>
+                                        </Link>
                                     ))}
                                 </div>
                             )

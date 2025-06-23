@@ -29,34 +29,34 @@ export const GetContentDetails = (contentId) => {
 
     const fetchContentDetails = async () => {
       setIsLoading(true);
-      
+
       try {
 
         //testing
         //--------------------FETCHING DATA FROM BACKEND--------------------//
         //   const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${contentId}`,
-      //     {
-      //       method: 'GET',
-      //       headers: {
-      //         "Content-Type": "application/json"
-      //       },
-      //     }
-      //     //--------------------FETCHING DATA FROM BACKEND--------------------//
-      //   );
+        //     {
+        //       method: 'GET',
+        //       headers: {
+        //         "Content-Type": "application/json"
+        //       },
+        //     }
+        //     //--------------------FETCHING DATA FROM BACKEND--------------------//
+        //   );
 
-      //   if (!response.ok)
-      //     throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
-      
-      //   const result = response.json(); //-----video object data-----//
-      //   if (result.success && result.data) {
+        //   if (!response.ok)
+        //     throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
+
+        //   const result = response.json(); //-----video object data-----//
+        //   if (result.success && result.data) {
         //     setVideo(result.data);
-      //     setContentItem(result.data);
-      //   };
-      // }
-      //testing
+        //     setContentItem(result.data);
+        //   };
+        // }
+        //testing
 
         const result = await FetchContentDetails(id); //-----video object data-----//
-         if (result) {
+        if (result) {
           setVideo(result);
           setContentItem(result);
         } else {
@@ -103,29 +103,30 @@ export const GetContentDetails = (contentId) => {
   return (
     <>
 
-      <div>
-        <ChannelSubscriptionUI videoUrl={video.url} videoTitle={video.title} />
-      </div>
+      {contentType === 'watch' && (
+        <div>
+          <ChannelSubscriptionUI videoUrl={video.url} videoTitle={video.title} />
+        </div>
+      )}
 
-      <div>
-        {contentType === 'image' && (
-          <img src={contentItem.url} alt={contentItem.title} className="max-w-4xl w-full h-auto rounded-lg shadow-lg" />
-        )}
+      {contentType === 'image' && (
+        <img src={contentItem.url} alt={contentItem.title} className="max-w-4xl w-full h-auto rounded-lg shadow-lg" />
+      )}
 
-        {contentType === 'file' && (
-          <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center">
-            <p className="text-gray-400 text-sm mb-4">📄 File: {contentItem.title}</p>
-            <a
-              href={contentItem.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center"
-            >
-              Download File
-            </a>
-          </div>
-        )}
-      </div>
+      {contentType === 'file' && (
+        <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center">
+          <p className="text-gray-400 text-sm mb-4">📄 File: {contentItem.title}</p>
+          <a
+            href={contentItem.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center"
+          >
+            Download File
+          </a>
+        </div>
+      )}
+
     </>
   )
 }

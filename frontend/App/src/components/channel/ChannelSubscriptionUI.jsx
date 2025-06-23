@@ -1,9 +1,9 @@
 import React from 'react'
 
 export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
-    return(
+    return (
 
-        <div className="container mx-auto">
+        <div className="flex container mx-auto">
 
 
             <div className="flex flex-col lg:flex-row gap-6">
@@ -11,7 +11,13 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
                 <div className="flex-1 lg:w-2/3">
                     {/* <!-- Video Player (Placeholder) --> */}
                     <div className="w-full aspect-video bg-black rounded-lg overflow-hidden mb-4">
-                        <video src={videoUrl} controls autoPlay className="w-full h-full object-cover">Your browser does not support the video tag.</video>
+                        <video
+                            src={videoUrl}
+                            controls
+                            autoPlay
+                            className="w-full h-full object-cover">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
 
                     {/* <!-- Video Title and Actions --> */}
@@ -24,6 +30,7 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
                     <div className="flex items-center mb-4 md:mb-0">
                         <img src="https://placehold.co/48x48/4A90E2/FFFFFF?text=HC" alt="Channel Avatar" className="w-12 h-12 rounded-full mr-3" />
                         <div>
+                            {/* //-----------channel name------------------ */}
                             <p className="font-semibold text-lg">Aayush Pradhan</p>
                             <p className="text-gray-400 text-sm">1M subscribers</p>
                         </div>
@@ -54,7 +61,15 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
 
                 {/* <!-- Video Description --> */}
                 <div className="bg-gray-700 p-4 rounded-lg mb-6 text-sm leading-relaxed">
-                    <p className="font-semibold mb-2">24,154 views <span className="ml-2 text-gray-400">18 hours ago</span></p>
+                    <p className="font-semibold mb-2">
+                        {/*------------ Views --------------- */}
+                        24,154 views
+                        <span className="ml-2 text-gray-400">
+
+                        {/*------------ uploaded time --------------- */}
+                            18 hours ago
+                        </span>
+                    </p>
                     <p>Enjoy the 1st six month of ManageEngine Site24x7 for free: <a href="#" className="text-blue-400 hover:underline">https://site24x7.manageengine.com</a></p>
                     <button className="text-blue-400 hover:underline mt-2">...more</button>
                 </div>
@@ -68,7 +83,7 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
                     </div>
 
                     {/* <!-- Example Comment --> */}
-                    <div className="flex mb-6">
+                    {/* <div className="flex mb-6">
                         <img src="https://placehold.co/40x40/E8912D/FFFFFF?text=J" alt="Commenter Avatar" className="w-10 h-10 rounded-full mr-3" />
                         <div>
                             <p className="text-sm font-semibold">@jamyagyaab_b <span className="text-gray-400 font-normal ml-2">18 hours ago</span></p>
@@ -85,10 +100,10 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
                                 <button className="hover:text-white">Reply</button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* <!-- Another Example Comment --> */}
-                    <div className="flex mb-6">
+                    {/* <div className="flex mb-6">
                         <img src="https://placehold.co/40x40/007bff/FFFFFF?text=T" alt="Commenter Avatar" className="w-10 h-10 rounded-full mr-3" />
                         <div>
                             <p className="text-sm font-semibold">Teachbox <span className="text-gray-400 font-normal ml-2">5 hours ago</span></p>
@@ -104,8 +119,8 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle }) => {
                                 </button>
                                 <button className="hover:text-white">Reply</button>
                             </div>
-                        </div>
-                    </div>
+                        </div> */}
+                    {/* </div> */}
                 </div>
             </div>
         </div >

@@ -2,7 +2,7 @@ import React from 'react'
 
 export const IncrementViews = async (contentId) => {
   try {
-     const response = await fetch(`${import.meta.env.VITE_SERVER_COUNTING}/upload/single-upload/${contentId}/views`,
+     const response = await fetch(`http://localhost:4000/upload/single-upload/${contentId}/views`,
       {
         method: 'PATCH',
         headers: {
