@@ -43,12 +43,12 @@ export const Content = () => {
                 setIsLoading(false);
             }
 
-            //-------------------- Navigating Content /video, /image, /file--------------------
         }
-
+        
         fetchContent();
     }, [navigate])
-
+    
+    //-------------------- Navigating Content /video, /image, /file--------------------//
     const navigateToContent = (item) => {
         const { contentType, _id } = item;
         const path = contentType === 'video' ? '/watch' : `/${contentType}`

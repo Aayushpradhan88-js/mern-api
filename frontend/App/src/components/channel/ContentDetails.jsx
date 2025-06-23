@@ -28,7 +28,14 @@ export const ContentDetails = () => {
       setIsLoading(true);
 
       try {
-        const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${id}`);
+        const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              "Content-Type": "application/json"
+            },
+          }
+        );
         if (!response.ok)
           throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
 

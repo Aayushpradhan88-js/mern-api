@@ -1,6 +1,8 @@
+import { promises as fsPromises } from "fs";
+import mongoose from 'mongoose';
+
 import { cloudinary } from "../utils/cloudinary.js"
 import { Upload } from "../models/uploadModels.js";
-import { promises as fsPromises } from "fs";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -62,8 +64,8 @@ export const uploadFileContent = async (req, res) => {
 
         const savedUpload = await newUpload.save();
         // console.log(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} metadata saved to MongoDB:`, savedUpload);
-  
- 
+
+
         return res.status(201).json({
             success: true,
             message: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} uploaded Successfully!`,
@@ -79,12 +81,12 @@ export const uploadFileContent = async (req, res) => {
     } catch (error) {
         // console.error(`Error during ${contentType || 'file'} upload process:`, error);
         return res
-        .status(500)
-        .json({
-            success: false,
-            message: `Server error during ${contentType || 'file'} upload.`,
-            error: error.message
-        })
+            .status(500)
+            .json({
+                success: false,
+                message: `Server error during ${contentType || 'file'} upload.`,
+                error: error.message
+            })
     }
     finally {
         // Clean up the temporary file
@@ -103,32 +105,97 @@ export const uploadFileContent = async (req, res) => {
 //GET ALL UPLOADS
 export const getAllUploads = async (req, res) => {
     try {
-        const uploads = await Upload.find().sort({createdAt: -1})
-    
-        if(!uploads){
+        const uploads = await Upload.find().sort({ createdAt: -1 })
+
+        if (!uploads) {
             throw new ApiError(400, "No Uploads Found");
         };
-    
+
         return res
-        .status(200)
-        .json(
-            new ApiResponse(200, uploads, "uploads fetched successfully")
-        );
+            .status(200)
+            .json(
+                new ApiResponse(200, uploads, "uploads fetched successfully")
+            );
     } catch (error) {
         console.error("Error fetching all uploads: ", error);
         return res
-        .status(500)
-        .json(
-            {
-                success: false,
-                message: "Server error while fetching uploads data",
-                error: error.message
-            }
-        )
+            .status(500)
+            .json(
+                {
+                    success: false,
+                    message: "Server error while fetching uploads data",
+                    error: error.message
+                }
+            )
     }
 }
 
-export const contentId = async(req, res) => {
+export const contentId = async (req, res) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError(401, "ID IS NOT FOUND");
+    try {
+        const contentItem = await Upload.findById(id);
+
+        if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    { data: contentItem },
+                    "Content Fetched Successfully"
+                )
+            )
+    }
+
+    catch (error) {
+        throw new ApiError(
+            500,
+            error.message,
+            "INTERNAL SERVER ERROR"
+        )
+    }
+
+}
+
+export const viewIncrement = async(req, res)=> {
     const {id} = req.params;
-    
+
+    try {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            throw new ApiError(
+                401,
+                "MEDIA ID IS NOT VALID"
+            )
+        }
+            
+        const contentItem = await Upload.findByIdAndUpdate(
+            id,
+            {
+                $inc: {views: 1},
+            },
+            {new: true}
+        );
+
+        if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {views: contentItem.views,
+                    Id: contentItem._id
+                },
+                "VIEWS INCREMENTED SUCCESSFULLY"
+            )
+        )
+    } catch (error) {
+        throw new ApiError(
+            500,
+            error.message,
+            "INTERNAL SERVER ERROR VIEWS INCREMENT"
+        )
+    }
 }
