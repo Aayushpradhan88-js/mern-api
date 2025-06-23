@@ -13,6 +13,6 @@ const router = express.Router();
 router.post("/upload-file", uploadFileContent);
 router.get("/all-uploads", getAllUploads);
 router.get("/single-upload/:id", contentId);
-router.patch("/single-upload/:id/view", viewIncrement);
+router.patch("/single-upload/:id/views", viewIncrement);
 
 export{router};

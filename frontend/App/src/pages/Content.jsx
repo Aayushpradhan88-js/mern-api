@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 import Chat from "../components/chat/Chat";
 
 export const Content = () => {
@@ -10,21 +9,22 @@ export const Content = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         const fetchContent = async () => {
             setIsLoading(true);
 
             try {
-                const response = await fetch('http://localhost:4000/upload/all-uploads', {
+                //--------------------FETCHING DATA FROM BACKEND--------------------//
+                const response = await fetch(`${import.meta.env.VITE_SERVER_CONTENT}/upload/all-uploads`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json"
                     },
                 });
+                //--------------------FETCHING DATA FROM BACKEND--------------------//
 
                 if (!response.ok) {
-                    //-----Handles HTTP errors 400 / 500-----
+                    //-----Handles HTTP errors 400 / 500-----//
                     const errorResult = await response.json();
                     throw new Error(errorResult.message || ` HTTP Error status: {response.status}`);
                 }
@@ -33,28 +33,35 @@ export const Content = () => {
 
                 if (result.success) {
                     setContentItems(result.data);
-                } else {
+                }
+
+                else {
                     toast.error(result.message || "Failed to fetch content.");
                 }
-            } catch (error) {
+            }
+
+            catch (error) {
                 console.log(error.message);
                 // toast.error(`Error failed to fetched content ${error.message}`);
-            } finally {
+            }
+
+            finally {
                 setIsLoading(false);
             }
 
         }
-        
+
         fetchContent();
     }, [navigate])
-    
+
     //-------------------- Navigating Content /video, /image, /file--------------------//
     const navigateToContent = (item) => {
         const { contentType, _id } = item;
-        const path = contentType === 'video' ? '/watch' : `/${contentType}`
-        navigate(`/${path}?id=${_id}`);
+        const path = contentType 
+        // === 'video' ? '/watch' : `/${contentType}`
+        navigate(`${path}?id=${_id}`);
     }
-    
+
     return (
         <div className="bg-black text-white font-sans">
             <div className="flex flex-col md:flex-row min-h-screen">

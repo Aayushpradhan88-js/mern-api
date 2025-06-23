@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChannelSubscriptionUI } from './ChannelSubscriptionUI';
-import { Toast } from '../toast/Toast';
 
-export const ContentDetails = () => {
+import { Toast } from '../toast/Toast';
+import { ChannelSubscriptionUI } from './ChannelSubscriptionUI';
+import { IncrementViews } from '../../services/ViewsService';
+import { FetchContentDetails } from '../../services/ContentService';
+
+export const GetContentDetails = (contentId) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [video, setVideo] = useState(null);
-  const [contentItem, setContentItem] = useState(null)
+  const [contentItem, setContentItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,27 +27,41 @@ export const ContentDetails = () => {
       return;
     };
 
-    //--------------------FETCHING DATA FROM BACKEND--------------------//
     const fetchContentDetails = async () => {
       setIsLoading(true);
-
+      
       try {
-        const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${id}`,
-          {
-            method: 'GET',
-            headers: {
-              "Content-Type": "application/json"
-            },
-          }
-        );
-        if (!response.ok)
-          throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
 
-        const result = response.json(); //-----video object data-----//
-        if (result.success && result.data) {
-          setVideo(result.data);
-          setContentItem(result.data);
-        };
+        //testing
+        //--------------------FETCHING DATA FROM BACKEND--------------------//
+        //   const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${contentId}`,
+      //     {
+      //       method: 'GET',
+      //       headers: {
+      //         "Content-Type": "application/json"
+      //       },
+      //     }
+      //     //--------------------FETCHING DATA FROM BACKEND--------------------//
+      //   );
+
+      //   if (!response.ok)
+      //     throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
+      
+      //   const result = response.json(); //-----video object data-----//
+      //   if (result.success && result.data) {
+        //     setVideo(result.data);
+      //     setContentItem(result.data);
+      //   };
+      // }
+      //testing
+
+        const result = await FetchContentDetails(id); //-----video object data-----//
+         if (result) {
+          setVideo(result);
+          setContentItem(result);
+        } else {
+          setError("Failed to load content details.");
+        }
       }
 
       catch (error) {

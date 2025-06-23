@@ -81,14 +81,11 @@ export const loginUser = async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) throw new ApiError("Invalid email");
-  console.log(user)
 
   const isPasswordValid = await user.validatePassword(password)
   if (!isPasswordValid) throw new ApiError("Invalid email or password");
-  console.log(isPasswordValid)
 
   const loggedIn = await User.findById(user._id).select("-password");
-  console.log(loggedIn)
 
   return res
     .status(200)

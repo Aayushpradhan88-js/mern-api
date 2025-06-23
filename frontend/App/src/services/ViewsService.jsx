@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const IncrementViews = async (mediaId) => {
+export const IncrementViews = async (contentId) => {
   try {
-    const response = await fetch(`${VITE_SEVER_COUNTING}/upload/single-upload/${mediaId}/view`,
+     const response = await fetch(`${import.meta.env.VITE_SERVER_COUNTING}/upload/single-upload/${contentId}/views`,
       {
         method: 'PATCH',
         headers: {
@@ -12,15 +12,16 @@ export const IncrementViews = async (mediaId) => {
     );
 
     if (!response.ok) {
-      //-----Handles HTTP errors 400 / 500----- 
+      //-----Handles HTTP errors 400 / 500-----//
       const errorResult = await response.json();
       throw new Error(errorResult.message || ` HTTP Error status: {response.status}`);
     }
 
-
     const data = await response.json();
-    return data;  // Should contain { views: newViewCount, mediaId: ... } from your ApiResponse
-  } catch (error) {
+    return data;  //-----Should contain { views: newViewCount, mediaId: ... } from your ApiResponse-----//
+  }
+
+  catch (error) {
     console.error("Failed to fetch data", error.message);
     Toast.error(error.message);
 
