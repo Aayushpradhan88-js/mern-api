@@ -133,9 +133,12 @@ export const getAllUploads = async (req, res) => {
 export const contentId = async (req, res) => {
     const { id } = req.params;
     console.log("Content ID: ",id)
-    if (!id) throw new ApiError(401, "ID IS NOT FOUND");
+    if (!id) throw new ApiError(400, "ID IS NOT FOUND");
     try {
-        const contentItem = await Upload.findById(id);
+        const contentItem = await Upload
+        .findById(id)
+        //-------CREATOR USERNAME & FOLLOWERS--------/
+        .populate('creator', 'username followers');
         // console.log(contentItem)
         if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
 

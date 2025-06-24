@@ -3,7 +3,8 @@ import express from "express";
 
 import {
   registerUser,
-  loginUser
+  loginUser,
+  toogleFollow
 } from "../controllers/userController.js";
 
 dotenv.config();
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.patch("/follow/:channelId", toogleFollow)
 
 //FUTURE
 /*
