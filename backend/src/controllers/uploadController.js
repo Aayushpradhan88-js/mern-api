@@ -144,7 +144,7 @@ export const contentId = async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
-                    { data: contentItem },
+                    contentItem,
                     "Content Fetched Successfully"
                 )
             )
@@ -179,7 +179,7 @@ export const viewIncrement = async(req, res)=> {
             {new: true}
         );
 
-        console.log(contentItem)
+        // console.log(contentItem)
         if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
 
         return res

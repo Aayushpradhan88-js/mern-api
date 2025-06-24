@@ -6,7 +6,7 @@ import { ChannelSubscriptionUI } from './ChannelSubscriptionUI';
 import { IncrementViews } from '../../services/ViewsService';
 import { FetchContentDetails } from '../../services/ContentService';
 
-export const GetContentDetails = (contentId) => {
+export const GetContentDetails = (id) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -37,7 +37,7 @@ export const GetContentDetails = (contentId) => {
           setContentItem(result);
           await IncrementViews(id) //-----Increment views-----//
         }
-         else {
+        else {
           setError("Failed to load content details.");
         }
       }
@@ -53,10 +53,21 @@ export const GetContentDetails = (contentId) => {
     };
 
     //-----Function TO INCREMENT VIEWS----------//
-    const IncrementContentViews = async(contentIdToIncrement) => {
-      const viewResponse = await IncrementViews(contentIdToIncrement);
+    const IncrementContentViews = async (contentIdToIncrement) => {
+      try {
+        const viewResponse = await IncrementViews(contentIdToIncrement);
+        if (viewResponse && viewResponse.data && typeof viewResponse.data.views !== 'undefined') {
+          setVideo(prev => prev ? { ...prev, views: viewResponse.data.views } : null);
+          setContentItem(prev => prev ? { ...prev, views: viewResponse.data.views } : null);
+        }
+      }
 
-      
+      catch (error) {
+        console.log("Filed to increment views", error.message);
+        Toast.error("failed to increment views");
+      }
+
+
     }
 
     fetchContentDetails();
@@ -88,17 +99,20 @@ export const GetContentDetails = (contentId) => {
   return (
     <>
 
-      {contentType === 'watch' && (
+      {contentType === 'watch' && video && (
         <div>
-          <ChannelSubscriptionUI videoUrl={video.url} videoTitle={video.title} />
+          <ChannelSubscriptionUI
+            videoUrl={video.url}
+            videoTitle={video.title}
+            views={video.views} />
         </div>
       )}
 
-      {contentType === 'image' && (
+      {contentType === 'image' && contentItem && (
         <img src={contentItem.url} alt={contentItem.title} className="max-w-4xl w-full h-auto rounded-lg shadow-lg" />
       )}
 
-      {contentType === 'file' && (
+      {contentType === 'file' && contentItem && (
         <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center">
           <p className="text-gray-400 text-sm mb-4">📄 File: {contentItem.title}</p>
           <a
