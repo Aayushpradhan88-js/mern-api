@@ -57,7 +57,10 @@ export const registerUser = async (req, res) => {
 
   return res
     .status(201)
-    .cookie("token", token)
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    })
     .json(
       new ApiResponse(
         201,
@@ -89,11 +92,16 @@ export const loginUser = async (req, res) => {
 
   return res
     .status(200)
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    })
     .json(
       new ApiResponse(
         200,
         {
           user: loggedIn,
+          token: token
         },
         "Successfully logged in"
       )
@@ -171,70 +179,70 @@ export const toogleFollow = async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(channelId)) throw new ApiError(401, "Invalid Channel ID");
 
-  if (!mognsoose.Types.ObjectId.isValid(currentUserId)) throw new ApiError(400, "Invalid Use ID" );
+  if (!mongoose.Types.ObjectId.isValid(currentUserId)) throw new ApiError(400, "Invalid Use ID");
 
-  if(currentUserId.toString() === channelId.toString()) throw new ApiError(400, "You Cannot follow youtseld");
+  if (currentUserId.toString() === channelId.toString()) throw new ApiError(400, "You Cannot follow youtseld");
 
 
   try {
     const userToFollow = await User.findById(channelId);
     const currentUser = await User.findById(currentUserId);
-  
-    if(!userToFollow) throw new ApiError(403, "CHANNEL NOT FOUND");
-    if(!currentUser) throw new ApiError(403, "CURRENT USER ID NOT FOUND");
-  
+
+    if (!userToFollow) throw new ApiError(403, "CHANNEL NOT FOUND");
+    if (!currentUser) throw new ApiError(403, "CURRENT USER ID NOT FOUND");
+
     const isFollowing = currentUser.following.includes(userToFollow._id);
-  
-    if(isFollowing) {
+
+    if (isFollowing) {
       //----------UNFOLLOW----------//
       currentUser.following.pull(userToFollow._id);
       userToFollow.followers.pull(currentUser._id);
-  
+
       await currentUser.save();
       await userToFollow.save();
-  
+
       return res
-      .status(200)
-      .json(
-        new ApiResponse (
-          200,
-          {
-            isFollowing: false,
-            followerCount: userToFollow.followers.length,
-            message: `SUCCESSFULLY UNFOLLOWED ${userToFollow.username}`
-          },
-          "UNFOLLOWED SUCCESSFULLY"
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            {
+              isFollowing: false,
+              followerCount: userToFollow.followers.length,
+              message: `SUCCESSFULLY UNFOLLOWED ${userToFollow.username}`
+            },
+            "UNFOLLOWED SUCCESSFULLY"
+          )
         )
-      )
-    } 
-  
+    }
+
     else {
       //----------FOLLOW----------//
       currentUser.following.push(userToFollow._id);
       userToFollow.followers.push(currentUser._id);
-  
+
       await currentUser.save();
       await userToFollow.save();
-  
+
       return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          {
-            isFollowing: true,
-            followerCount: userToFollow.followers.length,
-            message: `SUCCESSFULLY FOLLOWED ${userToFollow.username}`
-          },
-          "FOLLOWED SUCCESSFULLY"
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            {
+              isFollowing: true,
+              followerCount: userToFollow.followers.length,
+              message: `SUCCESSFULLY FOLLOWED ${userToFollow.username}`
+            },
+            "FOLLOWED SUCCESSFULLY"
+          )
         )
-      )
     }
-  } 
-  
-  
+  }
+
+
   catch (error) {
     throw new ApiError(500, error.message, "INTERNAL SERVER ERROR");
-    
+
   }
 }

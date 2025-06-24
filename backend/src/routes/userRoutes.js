@@ -6,13 +6,15 @@ import {
   loginUser,
   toogleFollow
 } from "../controllers/userController.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
+
 
 dotenv.config();
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.patch("/follow/:channelId", toogleFollow)
+router.patch("/follow/:channelId", verifyJWT, toogleFollow)
 
 //FUTURE
 /*
