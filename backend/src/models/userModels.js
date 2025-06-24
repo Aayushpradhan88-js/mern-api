@@ -36,6 +36,20 @@ const userModel = new Schema(
       minlength: [3 , "Password must be at least 6 characters long"],
     },
 
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
+
+    following: [
+      {
+        type:Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
+
     //FUTURE
     
     // watchHistory: {
@@ -63,18 +77,5 @@ const userModel = new Schema(
 userModel.methods.validatePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
   };
-  
-  //FUTURE
-  /*
-  //hashing password
-  userModel.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-  
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  });
-
-  //token generation
-  */
 
 export const User = mongoose.model("User", userModel);
