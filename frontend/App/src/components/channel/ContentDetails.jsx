@@ -31,35 +31,13 @@ export const GetContentDetails = (contentId) => {
       setIsLoading(true);
 
       try {
-
-        //testing
-        //--------------------FETCHING DATA FROM BACKEND--------------------//
-        //   const response = await fetch(`${VITE_SERVER_CONTENT}/upload/single-upload/${contentId}`,
-        //     {
-        //       method: 'GET',
-        //       headers: {
-        //         "Content-Type": "application/json"
-        //       },
-        //     }
-        //     //--------------------FETCHING DATA FROM BACKEND--------------------//
-        //   );
-
-        //   if (!response.ok)
-        //     throw new Error(`Failed to fetch video on STATUS: ${response.status}`);
-
-        //   const result = response.json(); //-----video object data-----//
-        //   if (result.success && result.data) {
-        //     setVideo(result.data);
-        //     setContentItem(result.data);
-        //   };
-        // }
-        //testing
-
         const result = await FetchContentDetails(id); //-----video object data-----//
         if (result) {
           setVideo(result);
           setContentItem(result);
-        } else {
+          await IncrementViews(id) //-----Increment views-----//
+        }
+         else {
           setError("Failed to load content details.");
         }
       }
@@ -73,6 +51,13 @@ export const GetContentDetails = (contentId) => {
         setIsLoading(false);
       };
     };
+
+    //-----Function TO INCREMENT VIEWS----------//
+    const IncrementContentViews = async(contentIdToIncrement) => {
+      const viewResponse = await IncrementViews(contentIdToIncrement);
+
+      
+    }
 
     fetchContentDetails();
   }, [location.search]);
