@@ -1,5 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
+import mongoose from "mongoose";
+
 import { User } from "../models/userModels.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -44,8 +44,6 @@ export const registerUser = async (req, res) => {
   const token = jwt.sign(
     {
       _id: newUser._id,
-      email: newUser.email,
-      username: newUser.username,
     },
     process.env.JWT_SECRET_KEY,
     { expiresIn: '1d' }
@@ -53,7 +51,7 @@ export const registerUser = async (req, res) => {
   );
   // console.log(process.env.JWT_SECRET_KEY)
 
-  const createdUser = await User.findById(newUser._id)
+  const createdUser = await User.findById(newUser._id).select("-password");
 
   return res
     .status(201)
@@ -88,7 +86,17 @@ export const loginUser = async (req, res) => {
   const isPasswordValid = await user.validatePassword(password)
   if (!isPasswordValid) throw new ApiError("Invalid email or password");
 
-  const loggedIn = await User.findById(user._id).select("-password");
+  const token = jwt.sign(
+    {
+      _id: user._id,
+    },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: '7D'
+    }
+  )
+
+  const loggedInUser = await User.findById(user._id).select("-password");
 
   return res
     .status(200)
@@ -100,7 +108,7 @@ export const loginUser = async (req, res) => {
       new ApiResponse(
         200,
         {
-          user: loggedIn,
+          user: loggedInUser,
           token: token
         },
         "Successfully logged in"
@@ -109,21 +117,25 @@ export const loginUser = async (req, res) => {
 
 }
 
-/*
 //logout user
 export const logoutUser = async (req, res) => {
-User.findByIdAndUpdate(req.user._id, { $unset: { token: 1 } });
+  User.findByIdAndUpdate(req.user._id, 
+    { 
+      $unset: { token: 1 }
+    }
+  );
 
-const options = {
-httpOnly: true,
-secure: true,
-sameSite: true,
-};
-return res.status(200).clearCookie("token", options).json({
-message: "Successfully logout",
-});
+  const options = {
+   httpOnly: true,
+    secure: false,
+    sameSite: true,
+  };
+  return res.status(200).clearCookie("token", options).json({
+    message: "Successfully logout",
+  });
 };
 
+/*
 
 //update user
 export const updateUser = async (req, res) => {
@@ -154,19 +166,6 @@ req.json({});
 };
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Folow Status
 
 export const toogleFollow = async (req, res) => {
@@ -177,11 +176,13 @@ export const toogleFollow = async (req, res) => {
 
   if (!currentUserId) throw new ApiError(401, "Unauthorized: User not logged In");
 
-  if (!mongoose.Types.ObjectId.isValid(channelId)) throw new ApiError(401, "Invalid Channel ID");
+  if (!mongoose.Types.ObjectId.isValid(channelId)) throw new ApiError(400, "Invalid Channel ID");
 
-  if (!mongoose.Types.ObjectId.isValid(currentUserId)) throw new ApiError(400, "Invalid Use ID");
+  // if (!mongoose.Types.ObjectId.isValid(currentUserId)) throw new ApiError(400, "Invalid User ID");
+  if (!mongoose.Types.ObjectId.isValid(currentUserId)) throw new ApiError(400, "Invalid User ID");
 
-  if (currentUserId.toString() === channelId.toString()) throw new ApiError(400, "You Cannot follow youtseld");
+
+  if (currentUserId.toString() === channelId.toString()) throw new ApiError(400, "You Cannot follow youtself");
 
 
   try {
@@ -242,7 +243,8 @@ export const toogleFollow = async (req, res) => {
 
 
   catch (error) {
-    throw new ApiError(500, error.message, "INTERNAL SERVER ERROR");
+    // throw new ApiError(500, error.message, "INTERNAL SERVER ERROR");
+    next(new ApiError(500, error.message || "Internal server error during follow/unfollow"));
 
   }
 }

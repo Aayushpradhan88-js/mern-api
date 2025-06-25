@@ -6,13 +6,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const verifyJWT = async(req, res, next) => {
   try {
-      const token = req.cookie?.token || req.header("Authorization")?.replace("Bearer", "");
+      const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   
       if(!token) throw new ApiError(401, "UNAUTHORIZED REQUEST TOKEN MISSING");
   
       const decodeToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   
-      const user = await User.findById(decodeToken?._id).select("password");
+      const user = await User.findById(decodeToken._id).select("-password");
   
       if(!user) throw new ApiError(401, "INVALID ACCESS TOKEN: USER NOT FOUND");
   
