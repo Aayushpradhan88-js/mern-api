@@ -9,6 +9,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const uploadFileContent = async (req, res) => {
     const { title, description, contentType } = req.body;
+    
+    //-----VERIFYING JWT MIDDLEWARE-----//
+    if(!req.user || !req.user._id) throw new ApiError(401, "UNAUTHORIZED USER");
 
     if (!title || !description) {
         throw new ApiError(400, "Title and description is required");
@@ -49,12 +52,13 @@ export const uploadFileContent = async (req, res) => {
         //TODO: UNDERSTAND THE CODE LINE
         const thumbnailUrl = (contentType === 'image' || contentType === 'video') ? cloudinaryResult.secure_url.replace(/\.(mp4|mov|avi)$/i, '.jpg') : cloudinaryResult.secure_url;
 
-        //SAVING UPLOAD DATA TO MONGODB
+        //----------SAVING UPLOAD DATA TO MONGODB----------//
         const newUpload = new Upload({
             title,
             description: description || '',
             contentType,
             thumbnail: thumbnailUrl,
+            uploadedBy: req.user._id,
             format: cloudinaryResult.format,
             version: cloudinaryResult.version,
             url: cloudinaryResult.secure_url,

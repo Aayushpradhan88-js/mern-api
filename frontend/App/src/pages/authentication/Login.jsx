@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
+import { Toast } from '../../components/toast/Toast'
+
 export const Login = () => {
 
     const [form, setForm] = useState({
@@ -11,14 +13,16 @@ export const Login = () => {
 
     const navigate = useNavigate();
 
-    const handleChangeValue = (e) => 
+    const handleChangeValue = (e) =>
         setForm(
             {
                 ...form,
                 [e.target.name]: e.target.value
             }
         )
-    
+
+    //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODVjOGUxNjEwYjYyZDhhNjI5MTQ0NGYiLCJpYXQiOjE3NTA5MzUxMzQsImV4cCI6MTc1MTUzOTkzNH0.aoKCWqSttGM2quFL6_s8R8Tvs9hb5RYpLqxv9oxP7w,  id = 685c8e1610b62d8a6291444f
+
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -26,7 +30,7 @@ export const Login = () => {
 
         try {
             //FETCHING DATA
-            const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/login`,
+            const res = await fetch(`http://localhost:4000/api/login`,
                 {
                     method: 'POST',
                     headers: {
@@ -40,11 +44,17 @@ export const Login = () => {
 
             //Storing data in LOCALSTORAGE
             if (res.ok) {
-                localStorage.setItem("token", data.token)
-                localStorage.setItem("user", JSON.stringify(data.user))
+                if (data.data && data.data.token) {
+                    localStorage.setItem("token", data.data.token);
+                }
+                // Store user data if it exists
+                if (data.data && data.data.user) {
+                    localStorage.setItem("user", JSON.stringify(data.data.user));
+                }
                 navigate("/content");
             } else {
-                alert(data.message || "signup failed")
+                alert(data.message || "signup failed");
+                Toast.error("Signup Failed");
             }
         } catch (err) {
             console.log("Registration error:", err.response ? err.response.data : err.message)
@@ -99,7 +109,7 @@ export const Login = () => {
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 mr-2" />
                     Login with Google
                 </button>
-                
+
                 {/* REGISTER */}
                 <div className="text-center text-sm">
                     If you don't have an account? <Link to="/register" className="ml-2 text-purple-400 hover:underline font-semibold">Register</Link>

@@ -1,9 +1,5 @@
 import React, { useState } from 'react'
-import {
-    Link
-    , useNavigate
-} from 'react-router-dom'
-// import {axiosInstance as axios} from '../../config/axios'
+import {Link, useNavigate} from 'react-router-dom'
 
 
 export const Register = () => {
@@ -27,14 +23,15 @@ export const Register = () => {
             }
         )
     }
-
+    
+    //----------SUBMITING DATA----------//
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
 
         try {
             //FETCHING DATA
-            const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/register`,
+            const res = await fetch(`http://localhost:4000/api/register`,
                 {
                     method: 'POST',
                     headers: {
@@ -44,10 +41,11 @@ export const Register = () => {
                 }
             )
 
-            const data = await res.json()
-
+            
             //Storing data in LOCALSTORAGE
             if (res.ok) {
+                
+                const data = res.json()
                 localStorage.setItem("token", data.token)
                 localStorage.setItem("user", JSON.stringify(data.user))
                 navigate("/content");

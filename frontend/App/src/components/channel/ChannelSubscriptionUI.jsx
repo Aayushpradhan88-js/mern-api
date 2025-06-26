@@ -15,12 +15,14 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle, views, creatorId, 
             </div>
 
             {/* Video Title */}
-            <h1 className="text-2xl font-bold text-white mb-2">{videoTitle}</h1>
+            <h1 className="text-2xl font-bold text-white mb-2"
+            >{videoTitle}
+            </h1>
 
             {/* Channel Info + Buttons */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                    <img src={`https://placehold.co/48x48/4A90E2/FFFFFF?text= ${creatorUsername ? creatorUsername.chatAt(0).toUpperCase() : 'A'}`} alt="Creator Avatar" className="rounded-full" />
+                    <img src={`https://placehold.co/48x48/4A90E2/FFFFFF?text= ${creatorUsername ? creatorUsername.chartAt(0).toUpperCase() : 'A'}`} alt="Creator Avatar" className="rounded-full" />
                     <div>
                         <p className="font-semibold">{creatorUsername}</p>
                         <p className="text-gray-400 text-sm">{followerCount} followers</p>

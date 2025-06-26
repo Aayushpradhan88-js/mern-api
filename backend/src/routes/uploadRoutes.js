@@ -7,14 +7,15 @@ import {
     contentId,   
     viewIncrement
 } from "../controllers/uploadController.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/upload-file", uploadFileContent);
+router.post("/upload-file",verifyJWT, uploadFileContent);
 router.get("/all-uploads", getAllUploads);
 
 //-----TODO: VERIFY JWT-----//
-router.get("/single-upload/:id", contentId);
-router.patch("/single-upload/:id/views", viewIncrement);
+router.get("/single-upload/:id",verifyJWT, contentId);
+router.patch("/single-upload/:id/views",verifyJWT, viewIncrement);
 
 export{router};
