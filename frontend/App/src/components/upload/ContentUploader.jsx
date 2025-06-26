@@ -34,16 +34,25 @@ export const ContentUploader = ({ onUploadSuccess }) => {
     formData.append("contentType", contentType);
 
     try {
+      const token = localStorage.getItem("token");
+
       const uploadUrl = `http://localhost:4000/upload/upload-file`;
 
       console.log(`Attempting to upload file "${selectedFile.name}" to "${uploadUrl}"`);
 
-      const response = await fetch(uploadUrl, {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(uploadUrl,
+        {
+          method: "POST",
+          body: formData,
+          "Authorization": `Bearer ${token}`
+        });
 
       const result = await response.json();  //Parse the JSON response from the backend
+
+      // if(response.ok){
+      //   if()
+      // }
+
 
       if (!response.ok) { // If the response status is not OK (e.g., 400, 500)
         console.error("File upload failed:", result);
@@ -117,7 +126,7 @@ export const ContentUploader = ({ onUploadSuccess }) => {
           </div>
 
           <button type="submit" disabled={isLoading || !selectedFile} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400">
-            {isLoading ? 'Uploading...' :`Upload ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}
+            {isLoading ? 'Uploading...' : `Upload ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}
           </button>
         </form>
       </div>

@@ -147,8 +147,8 @@ export const GetContentDetails = (id) => {
             videoUrl={video.url}
             videoTitle={video.title}
             views={video.views}
-            creatorId= {creatorData.id}
-            creatorUsername={creatorData.username}
+            creatorId= {creatorData ? creatorData._id : ""}
+            creatorUsername={creatorData ? creatorData.username : ""}
             followerCount={followerCount}
             isFollowing={isFollowing}
             onToogleFollow={HandleToogleFollow}

@@ -2,11 +2,14 @@ import React from 'react'
 
 export const IncrementViews = async (contentId) => {
   try {
+    const token = localStorage.getItem("token");
+
      const response = await fetch(`http://localhost:4000/upload/single-upload/${contentId}/views`,
       {
         method: 'PATCH',
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
       }
     );
