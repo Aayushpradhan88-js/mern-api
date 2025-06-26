@@ -111,7 +111,7 @@ export const GetContentDetails = (id) => {
      }
     };
     
-    HandleToogleFollow()
+    // HandleToogleFollow()
     fetchContentDetails();
   }, [location.search]);
 
@@ -147,7 +147,7 @@ export const GetContentDetails = (id) => {
             videoUrl={video.url}
             videoTitle={video.title}
             views={video.views}
-            creatorId= {creatorData._id}
+            creatorId= {creatorData.id}
             creatorUsername={creatorData.username}
             followerCount={followerCount}
             isFollowing={isFollowing}
