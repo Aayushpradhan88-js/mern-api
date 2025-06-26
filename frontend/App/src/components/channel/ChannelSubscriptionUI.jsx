@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const ChannelSubscriptionUI = ({ videoUrl, videoTitle, views }) => {
+export const ChannelSubscriptionUI = ({ videoUrl, videoTitle, views, creatorId, creatorUsername, followerCount, isFollowing, onToggleFollow }) => {
     return (
 
         <div className="max-w-6xl mx-auto px-4">
@@ -20,12 +20,17 @@ export const ChannelSubscriptionUI = ({ videoUrl, videoTitle, views }) => {
             {/* Channel Info + Buttons */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                    <img src="https://placehold.co/48x48/4A90E2/FFFFFF?text=HC" alt="Avatar" className="rounded-full" />
+                    <img src={`https://placehold.co/48x48/4A90E2/FFFFFF?text= ${creatorUsername ? creatorUsername.chatAt(0).toUpperCase() : 'A'}`} alt="Creator Avatar" className="rounded-full" />
                     <div>
-                        <p className="font-semibold">Aayush Pradhan</p>
-                        <p className="text-gray-400 text-sm">1M subscribers</p>
+                        <p className="font-semibold">{creatorUsername}</p>
+                        <p className="text-gray-400 text-sm">{followerCount} followers</p>
                     </div>
-                    <button className="ml-4 bg-white text-black px-4 py-2 rounded-full font-semibold">Subscribe</button>
+                    <button
+                        onClick={onToggleFollow}
+                        className={`ml-4 bg-white text-black px-4 py-2 rounded-full font-semibold${isFollowing ? 'bg-gray-600 text-white' : 'bg-white text-black'}`}
+                    >
+                        {isFollowing ? 'Following' : 'Follow'}
+                    </button>
                 </div>
 
                 <div className="flex mt-4 md:mt-0 space-x-3">

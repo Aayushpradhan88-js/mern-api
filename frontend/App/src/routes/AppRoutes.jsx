@@ -6,7 +6,7 @@ import { Register } from '../pages/authentication/Register';
 import { Login } from '../pages/authentication/Login'
 import { Content } from '../pages/Content'
 import { Upload } from '../components/upload/Upload'
-import { GetContentDetails } from '../components/channel/ContentDetails'
+import { GetContentDetails as ContentDetailPage } from '../components/channel/ContentDetails'
 
 export const AppRoutes = () => {
   return (
@@ -19,9 +19,9 @@ export const AppRoutes = () => {
         <Route path="/content" element={<Content />} />
         <Route path="/upload" element={<Upload />} />
         
-        <Route path="/watch" element={<GetContentDetails/>} />
-        <Route path="/image" element={<GetContentDetails/>} />
-        <Route path="/file" element={<GetContentDetails/>} />
+        <Route path="/watch" element={<ContentDetailPage/>} />
+        <Route path="/image" element={<ContentDetailPage/>} />
+        <Route path="/file" element={<ContentDetailPage/>} />
       </Routes>
     </BrowserRouter>
 

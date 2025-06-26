@@ -5,6 +5,7 @@ import { Toast } from '../toast/Toast';
 import { ChannelSubscriptionUI } from './ChannelSubscriptionUI';
 import { IncrementViews } from '../../services/ViewsService';
 import { FetchContentDetails } from '../../services/ContentService';
+import { ToogleFollowChannel } from '../../services/FollowSevice';
 
 export const GetContentDetails = (id) => {
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ export const GetContentDetails = (id) => {
   const [contentItem, setContentItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [creatorData, setCreatorData] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
 
   const contentType = location.pathname.substring(1);
 
@@ -30,11 +35,29 @@ export const GetContentDetails = (id) => {
     const fetchContentDetails = async () => {
       setIsLoading(true);
 
+      //-----GET CURRENTJ USER ID-----//W
+      const currentUserId = localStorage.getItem('userId');
+
       try {
         const result = await FetchContentDetails(id); //-----video object data-----//
         if (result) {
           setVideo(result);
           setContentItem(result);
+
+          if (result.creator) {
+            setCreatorData(result.creator);
+            setFollowerCount(result.creator.followers.length);
+
+            if (currentUserId && result.creator.followers.includes(currentUserId)) {
+              setIsFollowing(true);
+            }
+
+            else {
+              setIsFollowing(false);
+            };
+          };
+
+
           await IncrementViews(id) //-----Increment views-----//
         }
         else {
@@ -66,10 +89,29 @@ export const GetContentDetails = (id) => {
         console.log("Filed to increment views", error.message);
         Toast.error("failed to increment views");
       }
-
-
     }
 
+    //---FUNCTION FOR INCREMENT FOLLOW/UNFOLOW ACTION
+    const HandleToogleFollow = async() => {
+      const token = localStorage.getItem('token'); //-----TODO: MAKE AUTH-CONTEXT-----//
+      if(!creatorData|| !creatorData._id || !token) {
+        Toast.error("Cannot follow, Missing channel ID or authentication token");
+        return;
+      }
+
+     try {
+       const response = await ToogleFollowChannel(creatorData._id, token)
+       setIsFollowing(response.data.isFollowing);
+       setFollowerCount(response.data.followerCount);
+       Toast.success(response.data.message);
+     }
+     
+    catch (error) {
+      Toast.error(error.message || "Failed to toogle follow status");
+     }
+    };
+    
+    HandleToogleFollow()
     fetchContentDetails();
   }, [location.search]);
 
@@ -104,7 +146,13 @@ export const GetContentDetails = (id) => {
           <ChannelSubscriptionUI
             videoUrl={video.url}
             videoTitle={video.title}
-            views={video.views} />
+            views={video.views}
+            creatorId= {creatorData._id}
+            creatorUsername={creatorData.username}
+            followerCount={followerCount}
+            isFollowing={isFollowing}
+            onToogleFollow={HandleToogleFollow}
+            />
         </div>
       )}
 
