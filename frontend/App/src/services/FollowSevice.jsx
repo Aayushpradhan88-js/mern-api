@@ -6,25 +6,20 @@ export const ToogleFollowChannel = async (channelId, token) => {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem(token)}`
+                "Authorization": `Bearer ${(token)}`
             }
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            const errorResult = await response.json();
-            if (errorResult.ok) {
-                Toast.success(errorResult.json());
-            }
-
-            else {
-                Toast.error(errorResult.json())
-            }
+            Toast.success(result.message || "New follower added");
+            return result;
+        } else {
+            Toast.error(result.message || "Failed to follow channel");
+            throw new Error(result.message || "Failed to follow channel");
         }
-
-        const data = await response.json();
-        return data;
     }
-
     catch (error) {
         Toast.error(error.message);
     }

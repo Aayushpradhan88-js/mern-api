@@ -11,19 +11,7 @@ export const FetchContentDetails = async (contentId) => {
         "Authorization": `Bearer ${token}`
       },
     });
-
-    // const res = await response.json();
-
-    // if (res.ok) {
-    //   if  (data.data && data.data.token) {
-    //     localStorage.setItem("token", data.data.token);
-    //   }
-    //   // Store user data if it exists
-    //   if (data.data && data.data.user) {
-    //     localStorage.setItem("user", JSON.stringify(data.data.user));
-    //   }
-    // }
-    // const errorResult = await response.json();
+    
     const result = await response.json();
 
     if (!response.ok) {

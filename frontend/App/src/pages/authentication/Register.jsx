@@ -41,13 +41,16 @@ export const Register = () => {
                 }
             )
 
-            
+            const data = await res.json();
             //Storing data in LOCALSTORAGE
             if (res.ok) {
-                
-                const data = res.json()
-                localStorage.setItem("token", data.token)
-                localStorage.setItem("user", JSON.stringify(data.user))
+                if(data.data && data.data.token){
+                    localStorage.setItem("token", data.data.token);
+                }
+
+                if(data.data && data.data.user){
+                    localStorage.setItem("user", JSON.stringify(data.data.user));
+                }
                 navigate("/content");
             } else {
                 alert(data.message || "signup failed")

@@ -75,6 +75,10 @@ export const GetContentDetails = (id) => {
       };
     };
 
+  
+    fetchContentDetails();
+  }, [location.search]);
+
     //-----Function TO INCREMENT VIEWS----------//
     const IncrementContentViews = async (contentIdToIncrement) => {
       try {
@@ -90,90 +94,87 @@ export const GetContentDetails = (id) => {
         Toast.error("failed to increment views");
       }
     }
+    
 
-    //---FUNCTION FOR INCREMENT FOLLOW/UNFOLOW ACTION
-    const HandleToogleFollow = async() => {
-      const token = localStorage.getItem('token'); //-----TODO: MAKE AUTH-CONTEXT-----//
-      if(!creatorData|| !creatorData._id || !token) {
-        Toast.error("Cannot follow, Missing channel ID or authentication token");
-        return;
-      }
+    //-----Function FOR FOLLOW FEATURE----------//
+  const HandleToogleFollow = async () => {
+    const token = localStorage.getItem('token'); //-----TODO: MAKE AUTH-CONTEXT-----//
+    if (!creatorData || !creatorData._id || !token) {
+      Toast.error("Cannot follow, Missing channel ID or authentication token");
+      return;
+    }
 
-     try {
-       const response = await ToogleFollowChannel(creatorData._id, token)
-       setIsFollowing(response.data.isFollowing);
-       setFollowerCount(response.data.followerCount);
-       Toast.success(response.data.message);
-     }
-     
+    try {
+      const response = await ToogleFollowChannel(creatorData._id, token)
+      setIsFollowing(response.data.isFollowing);
+      setFollowerCount(response.data.followerCount);
+      Toast.success(response.data.message);
+    }
+
     catch (error) {
       Toast.error(error.message || "Failed to toogle follow status");
-     }
+    }
+
+  };
+    if (isLoading) {
+      return (
+        <div className='bg-black text-white min-h-screen flex items-center justify-center'>
+          <p>Loading video.....</p>
+        </div>
+      )
     };
-    
-    // HandleToogleFollow()
-    fetchContentDetails();
-  }, [location.search]);
 
-  if (isLoading) {
+    if (error) {
+      return (
+        <div className="bg-black text-white min-h-screen flex flex-col items-center justify-center p-4">
+          <p className="text-red-500 text-lg mb-4">Error: {error}</p>
+          <button onClick={() => navigate('/content')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Back to Content
+          </button>
+        </div>
+      );
+    };
+
+    if (!contentItem) return null;
+
+    if (!video) return null;
+
     return (
-      <div className='bg-black text-white min-h-screen flex items-center justify-center'>
-        <p>Loading video.....</p>
-      </div>
-    )
-  };
+      <>
 
-  if (error) {
-    return (
-      <div className="bg-black text-white min-h-screen flex flex-col items-center justify-center p-4">
-        <p className="text-red-500 text-lg mb-4">Error: {error}</p>
-        <button onClick={() => navigate('/content')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-          Back to Content
-        </button>
-      </div>
-    );
-  };
-
-  if (!contentItem) return null;
-
-  if (!video) return null;
-
-  return (
-    <>
-
-      {contentType === 'watch' && video && (
-        <div>
-          <ChannelSubscriptionUI
-            videoUrl={video.url}
-            videoTitle={video.title}
-            views={video.views}
-            creatorId= {creatorData ? creatorData._id : ""}
-            creatorUsername={creatorData ? creatorData.username : ""}
-            followerCount={followerCount}
-            isFollowing={isFollowing}
-            onToogleFollow={HandleToogleFollow}
+        {contentType === 'watch' && video && (
+          <div>
+            <ChannelSubscriptionUI
+              videoUrl={video.url}
+              videoTitle={video.title}
+              views={video.views}
+              creatorId={creatorData ? creatorData._id : ""}
+              creatorUsername={creatorData ? creatorData.username : ""}
+              followerCount={followerCount}
+              isFollowing={isFollowing}
+              onToogleFollow={HandleToogleFollow}
             />
-        </div>
-      )}
+          </div>
+        )}
 
-      {contentType === 'image' && contentItem && (
-        <img src={contentItem.url} alt={contentItem.title} className="max-w-4xl w-full h-auto rounded-lg shadow-lg" />
-      )}
+        {contentType === 'image' && contentItem && (
+          <img src={contentItem.url} alt={contentItem.title} className="max-w-4xl w-full h-auto rounded-lg shadow-lg" />
+        )}
 
-      {contentType === 'file' && contentItem && (
-        <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center">
-          <p className="text-gray-400 text-sm mb-4">📄 File: {contentItem.title}</p>
-          <a
-            href={contentItem.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center"
-          >
-            Download File
-          </a>
-        </div>
-      )}
+        {contentType === 'file' && contentItem && (
+          <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center">
+            <p className="text-gray-400 text-sm mb-4">📄 File: {contentItem.title}</p>
+            <a
+              href={contentItem.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              Download File
+            </a>
+          </div>
+        )}
 
-    </>
-  )
-}
+      </>
+    )
+  }
