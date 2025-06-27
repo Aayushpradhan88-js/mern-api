@@ -1,17 +1,18 @@
 import { promises as fsPromises } from "fs";
 import mongoose from 'mongoose';
 
-import { cloudinary } from "../utils/cloudinary.js"
 import { Upload } from "../models/uploadModels.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { cloudinary } from "../utils/cloudinary.js"
 
 
+//--------------------UPLOAD CONTENT--------------------//
 export const uploadFileContent = async (req, res) => {
     const { title, description, contentType } = req.body;
-    
+
     //-----VERIFYING JWT MIDDLEWARE-----//
-    if(!req.user || !req.user._id) throw new ApiError(401, "UNAUTHORIZED USER");
+    if (!req.user || !req.user._id) throw new ApiError(401, "UNAUTHORIZED USER");
 
     if (!title || !description) {
         throw new ApiError(400, "Title and description is required");
@@ -106,7 +107,7 @@ export const uploadFileContent = async (req, res) => {
 
 }
 
-//GET ALL UPLOADS
+//--------------------GET ALL UPLOADS--------------------//
 export const getAllUploads = async (req, res) => {
     try {
         const uploads = await Upload.find().sort({ createdAt: -1 })
@@ -134,14 +135,15 @@ export const getAllUploads = async (req, res) => {
     }
 }
 
+//--------------------UPLOADED CONTENT WITH ID CONTROLLER--------------------//
 export const contentId = async (req, res) => {
     const { id } = req.params;
-    console.log("Content ID: ",id)
+    console.log("Content ID: ", id)
     if (!id) throw new ApiError(400, "ID IS NOT FOUND");
     try {
         const contentItem = await Upload.findById(id)
-        //-------CREATOR USERNAME & FOLLOWERS--------/
-        .populate('uploadedBy', 'username followers');
+            //-------CREATOR USERNAME & FOLLOWERS--------/
+            .populate('uploadedBy', 'username followers');
         // console.log(contentItem)
         if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
 
@@ -166,39 +168,41 @@ export const contentId = async (req, res) => {
 
 }
 
-export const viewIncrement = async(req, res)=> {
-    const {id} = req.params;
+//--------------------CONTET VIEW INCREMENT--------------------//
+export const viewIncrement = async (req, res) => {
+    const { id } = req.params;
 
     try {
-        if(!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new ApiError(
                 401,
                 "MEDIA ID IS NOT VALID"
             )
         }
-            
+
         const contentItem = await Upload.findByIdAndUpdate(
             id,
             {
-                $inc: {views: 1},
+                $inc: { views: 1 },
             },
-            {new: true}
+            { new: true }
         );
 
         // console.log(contentItem)
         if (!contentItem) throw new ApiError(401, "CONTENT ID IS NOT FOUND");
 
         return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                {views: contentItem.views,
-                    Id: contentItem._id
-                },
-                "VIEWS INCREMENTED SUCCESSFULLY"
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        views: contentItem.views,
+                        Id: contentItem._id
+                    },
+                    "VIEWS INCREMENTED SUCCESSFULLY"
+                )
             )
-        )
     } catch (error) {
         throw new ApiError(
             500,
@@ -207,3 +211,139 @@ export const viewIncrement = async(req, res)=> {
         )
     }
 }
+
+//--------------------UPDATING/EDITING CONTENT--------------------//
+export const updateContent = async (req, res) => {
+    const { id } = req.params;
+    const { title, description } = req.body;
+    const currentUserId = req.user?._id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return next(new ApiError(400, "INVALID CONTENT ID"));
+    };
+
+    if (!title && !description) {
+        throw new ApiError(400, "TITLE OR DESCRIPTION IS REQUIRED FOR UPDATING");
+    };
+
+    try {
+        const content = await Upload.find(id);
+        if (!content) throw new ApiError(400, "CONTENT ID NOT FOUND TO UPDATE USER !")
+
+        //-----AUTHORIZATION CHECK-----//
+        if (content.uploadedBy.toString() !== currentUserId.toString()) throw new ApiError(400, "YOU'RE NOT AUTHORIZED USER TO EDIT THE CONTENT");
+
+        if (title) {
+            content.title = title;
+        };
+
+        if (description) {
+            connect.description = description;
+        };
+
+        const updatedContent = await content.save();
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    updatedContent,
+                    "CONTENT UPDATED SUCCESSFULLY"
+                )
+            )
+    }
+
+    catch (error) {
+        return (
+            new ApiError(
+                500,
+                error.message,
+                "INTERNAL SERVER WHILE UPDATING CONTENT"
+            )
+        )
+    }
+}
+
+//--------------------DELETING CONTENT FROM CLOUDINARY && MONGODB--------------------//
+export const deleteContent = async (req, res) => {
+    const { id } = req.params;
+    const currentUserId = req.user?._id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "INVALID CONTENT ID TO DELETE CONTENT");
+    }
+
+    if (!currentUserId) throw new ApiError(400, "CURRENT USER ID DOES NOT EXIST");
+
+    try {
+        const contentId = await Upload.findById(id);
+
+        if (!contentId) throw new ApiError(400, "CONTENT ID IS NOT FOUND TO DELETE CONENT");
+
+        //-----AUTHORIZATION CHECK-----//
+        if (contentId.id.toString() === currentUserId.toString()) {
+            throw new ApiError(400, "YOU'RE NOT AUTHORIZED TO DELETE THE CONTENT");
+        };
+
+        //-----DELETING CONTENT FROM CLOUDINARY-----//
+        await cloudinary.uploader.destroy(
+            contentId.public_id,
+            {
+                resource_type: contentId.resourceType
+            }
+        )
+
+        //----AFTER THAT FROM THE MONGODB-----//
+        await Upload.findByIdAndDelete(id);
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {},
+                    "CONTENT DELETED SUCCESSFULLY"
+                )
+            );
+    }
+
+    catch (error) {
+        return (
+            new ApiError(
+                500,
+                error.message,
+                "INTERNAL SERVER ERROR WHILE DELETING CONTENT"
+            )
+        );
+    };
+};
+
+//--------------------LOGGED'IN USERS CONTENT--------------------//
+export const myContent = async (req, res, next) => {
+    const currentUserId = req.user?._id;
+    if (!currentUserId) throw new ApiError(400, "USER IS NOT EXISTED");
+
+    try {
+        const myUploads = await Upload.find(
+            {
+                uploadedBy: currentUserId
+            },
+            {
+                createdAt: -1
+            }
+        )
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    myUploads,
+                    "User's content fetched successfully"
+                ));
+    }
+
+    catch (error) {
+        next(new ApiError(500, error.message || "Internal server error while fetching user's content."));
+    }
+};

@@ -26,6 +26,13 @@ const UploadModel = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+
+    privacy:{
+        type:String,
+        enum: ['public', 'private', 'unlisted'],
+        default: 'public'
+    },
+    
     //---- ViewsCounter (applies to all content) -----
     views: {
         type: Number,
