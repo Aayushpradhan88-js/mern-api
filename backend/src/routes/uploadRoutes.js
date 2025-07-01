@@ -14,7 +14,7 @@ import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/upload-file",verifyJWT, uploadFileContent);
+router.post("/upload-file", verifyJWT,uploadFileContent);
 router.get("/all-uploads", getAllUploads);
 router.get("/single-upload/:id",verifyJWT, contentId);
 router.patch("/single-upload/:id/views",verifyJWT, viewIncrement);

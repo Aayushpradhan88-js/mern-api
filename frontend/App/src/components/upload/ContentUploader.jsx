@@ -34,25 +34,13 @@ export const ContentUploader = ({ onUploadSuccess }) => {
     formData.append("contentType", contentType);
 
     try {
-      const token = localStorage.getItem("token");
-
-      const uploadUrl = `http://localhost:4000/upload/upload-file`;
-
-      console.log(`Attempting to upload file "${selectedFile.name}" to "${uploadUrl}"`);
-
-      const response = await fetch(uploadUrl,
+      const response = await fetch('http://localhost:4000/upload/upload-file',
         {
           method: "POST",
           body: formData,
-          "Authorization": `Bearer ${token}`
         });
 
       const result = await response.json();  //Parse the JSON response from the backend
-
-      // if(response.ok){
-      //   if()
-      // }
-
 
       if (!response.ok) { // If the response status is not OK (e.g., 400, 500)
         console.error("File upload failed:", result);

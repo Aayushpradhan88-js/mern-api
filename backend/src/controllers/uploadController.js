@@ -4,45 +4,45 @@ import mongoose from 'mongoose';
 import { Upload } from "../models/uploadModels.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { cloudinary } from "../utils/cloudinary.js"
-
+import { cloudinary } from "../utils/cloudinary.js";
 
 //--------------------UPLOAD CONTENT--------------------//
 export const uploadFileContent = async (req, res) => {
     const { title, description, contentType } = req.body;
 
     //-----VERIFYING JWT MIDDLEWARE-----//
-    if (!req.user || !req.user._id) throw new ApiError(401, "UNAUTHORIZED USER");
+    if (!req.user || !req.user._id) {
+        throw new ApiError(401, "UNAUTHORIZED USER");
+    }
 
     if (!title || !description) {
         throw new ApiError(400, "Title and description is required");
     }
 
-    if (!req.files || !req.files.photo || !req.files.photo.tempFilePath) {
+    if (!req.files || !req.files.content || !req.files.content.tempFilePath) {
         console.log("No file uploaded or tempFilePath not found");
 
         return res.status(400).json({
             success: false,
-            message: "No file uploaded. Please ensure you are sending a file with the field name 'photo'."
+            message: "No file uploaded"
         })
     }
 
-    const file = req.files.photo;
+    const file = req.files.content;
     const tempFilePath = file.tempFilePath;
 
     try {
 
-        const contentTypeToResourceTypeMap = {
+        const contentTypeToResourceType = {
             'image': 'image',
             'video': 'video',
-            'file': 'raw' //For documents, pdf, txt, files 
+            'file': 'raw' //-----For documents, pdf, txt, files-----//
         };
 
-        const cloudinaryResourceType = contentTypeToResourceTypeMap[contentType?.toLowerCase()];
-
+        const cloudinaryResourceType = contentTypeToResourceType[contentType?.toLowerCase()];
         if (!cloudinaryResourceType) throw new ApiError(400, 'In-Valid Content-Type');
 
-        //UPLOAD FILE ON CLOUDINARY
+        //----------UPLOAD FILE ON CLOUDINARY----------//
         const cloudinaryResult = await cloudinary.uploader.upload(tempFilePath, {
             resource_type: cloudinaryResourceType,
             // format: format
@@ -50,8 +50,10 @@ export const uploadFileContent = async (req, res) => {
 
         console.log(`FILE TYPE ${contentType} IS SUCCESSFULLY UPLOADED ON CLOUDINARY`, cloudinaryResult);
 
-        //TODO: UNDERSTAND THE CODE LINE
-        const thumbnailUrl = (contentType === 'image' || contentType === 'video') ? cloudinaryResult.secure_url.replace(/\.(mp4|mov|avi)$/i, '.jpg') : cloudinaryResult.secure_url;
+        //----------TODO: UNDERSTAND THE CODE LINE----------//
+        const thumbnailUrl = (contentType === 'image' || contentType === 'video' || contentType === 'file') ?
+            cloudinaryResult.secure_url.replace(/\.(mp4|mov|avi)$/i, '.jpg') :
+            cloudinaryResult.secure_url;
 
         //----------SAVING UPLOAD DATA TO MONGODB----------//
         const newUpload = new Upload({
@@ -69,7 +71,6 @@ export const uploadFileContent = async (req, res) => {
 
         const savedUpload = await newUpload.save();
         // console.log(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} metadata saved to MongoDB:`, savedUpload);
-
 
         return res.status(201).json({
             success: true,
@@ -98,7 +99,7 @@ export const uploadFileContent = async (req, res) => {
         if (tempFilePath) { // Check if tempFilePath was defined
             try {
                 await fsPromises.unlink(tempFilePath); // Use fs.promises for async/await
-                // console.log("Temporary file deleted:", tempFilePath);
+                console.log("Temporary file deleted:", tempFilePath);
             } catch (unlinkError) {
                 console.error("Error deleting temporary file:", tempFilePath, unlinkError);
             }
@@ -110,7 +111,8 @@ export const uploadFileContent = async (req, res) => {
 //--------------------GET ALL UPLOADS--------------------//
 export const getAllUploads = async (req, res) => {
     try {
-        const uploads = await Upload.find().sort({ createdAt: -1 })
+        const uploads = await Upload.find().
+        sort({ createdAt: -1 }) //-----uploaded files descending-order (newest first)-----//
 
         if (!uploads) {
             throw new ApiError(400, "No Uploads Found");
@@ -227,7 +229,7 @@ export const updateContent = async (req, res) => {
     };
 
     try {
-        const content = await Upload.find(id);
+        const content = await Upload.findById(id);
         if (!content) throw new ApiError(400, "CONTENT ID NOT FOUND TO UPDATE USER !")
 
         //-----AUTHORIZATION CHECK-----//
@@ -238,7 +240,7 @@ export const updateContent = async (req, res) => {
         };
 
         if (description) {
-            connect.description = description;
+            content.description = description;
         };
 
         const updatedContent = await content.save();
@@ -325,14 +327,9 @@ export const myContent = async (req, res, next) => {
     if (!currentUserId) throw new ApiError(400, "USER IS NOT EXISTED");
 
     try {
-        const myUploads = await Upload.find(
-            {
-                uploadedBy: currentUserId
-            },
-            {
-                createdAt: -1
-            }
-        )
+        const myUploads = await Upload
+            .find({ uploadedBy: currentUserId })
+            .sort({ createdAt: -1 })
         return res
             .status(200)
             .json(

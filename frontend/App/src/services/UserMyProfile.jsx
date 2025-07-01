@@ -17,7 +17,7 @@ const getAuthHeaders = () => {
 };
 
 
-export const fetchMyContent = async () => {
+export const FetchMyContent = async () => {
   const headers = getAuthHeaders();
   if (!headers) return null;
 
@@ -41,12 +41,12 @@ export const fetchMyContent = async () => {
 
 }
 
-export const DeleteMyContent = async () => {
+export const DeleteMyContent = async (contentId) => {
   const headers = getAuthHeaders();
-  if (!headers) return null;
+  if (!headers) return false;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/upload/delete-content/:id`,
+    const response = await fetch(`${API_BASE_URL}/upload/delete-content/${contentId}`,
       {
         "Content-Type": "DELETE",
         headers
@@ -56,6 +56,7 @@ export const DeleteMyContent = async () => {
     const result = await response.json();
     if (!response.ok) throw new Error("Failed to DELETE content");
 
+    Toast.success("content deleted successfully");
     return result.data || [];
   }
 
@@ -80,6 +81,7 @@ export const UpdateMyContent = async () => {
     const result = await response.json();
     if (!response.ok) throw new Error("Failed to UPDATE content");
 
+    Toast.success("content updated successfully");
     return result.data || [];
   }
 

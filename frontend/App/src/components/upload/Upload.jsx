@@ -9,7 +9,6 @@ export const Upload = () => {
     const handleContentUploadSuccess = (newItem) => {
         toast.success(`${newItem.contentType.chatAt(0).toUpperCase()+ newItem.contentType.slice(1)} uploaded successfully`)
         navigate(`/content/${newItem._id}`)
-        // Navigate back to the content page to see the new upload
         navigate('/content'); 
     };
 

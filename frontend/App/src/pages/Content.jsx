@@ -26,7 +26,7 @@ export const Content = () => {
                 if (!response.ok) {
                     //-----Handles HTTP errors 400 / 500-----//
                     const errorResult = await response.json();
-                    throw new Error(errorResult.message || ` HTTP Error status: {response.status}`);
+                    throw new Error(errorResult.message || ` HTTP Error status: ${response.status}`);
                 }
 
                 const result = await response.json();
@@ -62,6 +62,8 @@ export const Content = () => {
                     <div className="text-xl font-bold mb-8">LOGO</div>
                     <nav className="space-y-4">
                         <a href="#" className="block">videos</a>
+                        <Link to="/profile" className="block">My Content</Link>
+                        <Link to="/demoprofile" className="block">Dummy Content</Link>
                         <a href="#" className="block">tweets</a>
                         <a href="#" className="block">likes</a>
                         <a href="" className="block">Image</a>
@@ -141,7 +143,7 @@ export const Content = () => {
                                                 <div
                                                     className="w-full h-48 flex items-center justify-center bg-gray-700 p-3">
                                                     <span className="text-gray-400 text-sm text-center">📄 {item.title || 'File'}</span>
-                                                    </div>
+                                                </div>
                                             )}
 
                                             <div className="p-3">
